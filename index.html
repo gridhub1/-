@@ -55,7 +55,7 @@
             position: relative;
         }
 
-        /* خلفية جبارة تتحرك بشكل شبكة رقمية متطورة وعصرية تعبر عن GridHub */
+        /* تعديل الخلفية لتصبح مبهجة ومضيئة بمزيج سيبراني حيوي ومشرق وثلاثي الأبعاد */
         body::before {
             content: '';
             position: fixed;
@@ -64,17 +64,18 @@
             width: 100%;
             height: 100%;
             background-image: 
-                linear-gradient(rgba(0, 85, 255, 0.04) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0, 85, 255, 0.04) 1px, transparent 1px),
-                radial-gradient(circle at 50% 50%, rgba(0, 85, 255, 0.07) 0%, transparent 60%);
-            background-size: 40px 40px, 40px 40px, 100% 100%;
+                linear-gradient(rgba(0, 85, 255, 0.07) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 85, 255, 0.07) 1px, transparent 1px),
+                radial-gradient(circle at 20% 30%, rgba(0, 85, 255, 0.2) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(139, 92, 246, 0.2) 0%, transparent 50%);
+            background-size: 40px 40px, 40px 40px, 100% 100%, 100% 100%;
             z-index: -1;
-            animation: gridMove 25s linear infinite;
+            animation: gridMove 20s linear infinite;
         }
 
         @keyframes gridMove {
-            0% { background-position: 0 0, 0 0, 0 0; }
-            100% { background-position: 40px 40px, 40px 40px, 0 0; }
+            0% { background-position: 0 0, 0 0, 0 0, 0 0; }
+            100% { background-position: 40px 40px, 40px 40px, 0 0, 0 0; }
         }
 
         .container {
@@ -487,26 +488,6 @@
             font-size: 1.2rem;
         }
 
-        .whatsapp-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 12px;
-            background: linear-gradient(45deg, #0055ff, #ffffff);
-            color: #020813;
-            text-decoration: none;
-            padding: 16px 45px;
-            border-radius: 50px;
-            font-weight: bold;
-            font-size: 1.25rem;
-            box-shadow: 0 10px 30px rgba(0, 85, 255, 0.3);
-            transition: var(--transition-smooth);
-        }
-
-        .whatsapp-btn:hover {
-            transform: scale(1.05) translateY(-3px);
-            box-shadow: 0 15px 35px rgba(0, 85, 255, 0.5);
-        }
-
         /* استايل الفورم الجديد ليتوافق تماماً مع فخامة أزرق وأبيض الموقع */
         .cyber-form {
             max-width: 600px;
@@ -695,7 +676,7 @@
                 <div class="service-card">
                     <div class="icon-box"><i class="fa-solid fa-bullhorn"></i></div>
                     <h3>إدارة صفحات السوشيال ميديا</h3>
-                    <p>كتابة المحتوى، جدولة المنشورات، التفاعل مع الجمهور، وبناء خطة تسويقية تضمن لك الانتشار والنمو.</p>
+                    <p>كتابة المحتوى، جدولة المنشورات, التفاعل مع الجمهور، وبناء خطة تسويقية تضمن لك الانتشار والنمو.</p>
                 </div>
             </div>
         </div>
@@ -706,15 +687,13 @@
             <div class="contact-box">
                 <h2>جاهز لتطوير مشروعك القادم؟</h2>
                 <p>تواصل معنا اليوم ودعنا نحول أفكارك إلى واقع رقمي مبهر.</p>
-                <a href="https://wa.me/your_number" target="_blank" class="whatsapp-btn">
-                    <i class="fa-brands fa-whatsapp"></i> تواصل معنا عبر واتساب
-                </a>
 
                 <form class="cyber-form" action="https://formsubmit.co/GridHub200@gmail.com" method="POST">
                     
                     <input type="hidden" name="_subject" value="رسالة جديدة من موقع GridHub!">
                     <input type="hidden" name="_template" value="box">
                     <input type="hidden" name="_captcha" value="false">
+                    <input type="hidden" name="_next" value="window.location.href">
                     
                     <div class="form-group">
                         <label for="name">الإسم الكريم</label>
