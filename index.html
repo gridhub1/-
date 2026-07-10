@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GridHub | الحلول الرقمية المتكاملة</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <div class="loader-wrapper" id="loader">
+        <div class="loader-content">
+            <div class="logo-animation">
+                <span class="bracket">&lt;</span>
+                <span class="text">GridHub</span>
+                <span class="bracket">/&gt;</span>
+            </div>
+            <div class="load-bar">
+                <div class="progress"></div>
+            </div>
+            <p>جاري تحميل الإبداع الرقمي...</p>
+        </div>
+    </div>
+
+    <header>
+        <div class="container header-container">
+            <div class="logo">
+                <img src="https://i.ibb.co/MyhstGh0/Picsart-26-07-10-23-47-06-393.png" alt="GridHub Logo">
+                <span>GridHub</span>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#home" class="active">الرئيسية</a></li>
+                    <li><a href="#services">خدماتنا</a></li>
+                    <li><a href="#contact">تواصل معنا</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section id="home" class="hero-section">
+        <div class="container hero-container">
+            <div class="hero-text">
+                <h1>حيث تلتقي البرمجة بـ <span class="highlight">الإبداع الرقمي</span></h1>
+                <p>ندمج الكود الذكي بالتصميم الاحترافي لنصنع لعلامتك التجارية حضوراً رقمياً متكاملاً وقوياً.</p>
+                <div class="hero-buttons">
+                    <a href="#services" class="btn btn-primary">اكتشف خدماتنا</a>
+                    <a href="#contact" class="btn btn-secondary">ابدأ مشروعك الآن</a>
+                </div>
+            </div>
+            <div class="hero-image">
+                <div class="grid-box">
+                    <div class="grid-item"><i class="fa-solid fa-code"></i></div>
+                    <div class="grid-item"><i class="fa-solid fa-palette"></i></div>
+                    <div class="grid-item"><i class="fa-solid fa-hashtag"></i></div>
+                    <div class="grid-item"><i class="fa-solid fa-chart-line"></i></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="services" class="services-section">
+        <div class="container">
+            <div class="section-title">
+                <h2>ماذا نقدم في GridHub؟</h2>
+                <p>كل ما يحتاجه بيزنسك أو قناتك للنمو في مكان واحد</p>
+            </div>
+            <div class="services-grid">
+                <div class="service-card">
+                    <div class="icon-box"><i class="fa-solid fa-laptop-code"></i></div>
+                    <h3>برمجة وتطوير الويب</h3>
+                    <p>تصميم وبرمجة مواقع ومتاجر إلكترونية سريعة، مودرن، ومتوافقة مع جميع الشاشات بأحدث التقنيات.</p>
+                </div>
+                <div class="service-card">
+                    <div class="icon-box"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+                    <h3>التصميم والـ Thumbnails</h3>
+                    <p>صناعة صور مصغرة (Thumbnails) جاذبة لليوتيوب، بوسترات إعلانية، وهوية بصرية كاملة لشركتك.</p>
+                </div>
+                <div class="service-card">
+                    <div class="icon-box"><i class="fa-solid fa-bullhorn"></i></div>
+                    <h3>إدارة صفحات السوشيال ميديا</h3>
+                    <p>كتابة المحتوى، جدولة المنشورات، التفاعل مع الجمهور، وبناء خطة تسويقية تضمن لك الانتشار والنمو.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="contact-section">
+        <div class="container">
+            <div class="contact-box">
+                <h2>جاهز لتطوير مشروعك القادم؟</h2>
+                <p>تواصل معنا اليوم ودعنا نحول أفكارك إلى واقع رقمي مبهر.</p>
+                <a href="https://wa.me/your_number" target="_blank" class="whatsapp-btn">
+                    <i class="fa-brands fa-whatsapp"></i> تواصل معنا عبر واتساب
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2026 GridHub. جميع الحقوق محفوظة.</p>
+    </footer>
+
+    <script>
+        window.addEventListener('load', function() {
+            const loader = document.getElementById('loader');
+            // تأخير بسيط لمنح حركة التحميل طابعاً جمالياً
+            setTimeout(() => {
+                loader.style.opacity = '0';
+                setTimeout(() => {
+                    loader.style.display = 'none';
+                }, 500);
+            }, 2000); 
+        });
+    </script>
+</body>
+</html>
