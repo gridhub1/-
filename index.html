@@ -717,6 +717,24 @@
             line-height: 1.6;
             margin-bottom: 25px;
         }
+
+        /* ==========================================================================
+           9. استايلات تأثيرات حركة التمرير الفاخرة (Scroll Reveal Animations)
+           ========================================================================== */
+        .reveal-fade, .reveal-left, .reveal-right, .reveal-zoom {
+            opacity: 0;
+            transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1), transform 1s cubic-bezier(0.16, 1, 0.3, 1);
+            will-change: transform, opacity;
+        }
+        .reveal-fade { transform: translateY(40px); }
+        .reveal-left { transform: translateX(-50px); }
+        .reveal-right { transform: translateX(50px); }
+        .reveal-zoom { transform: scale(0.9); }
+
+        .reveal-visible {
+            opacity: 1 !important;
+            transform: translate(0) scale(1) !important;
+        }
     </style>
 </head>
 <body>
@@ -756,7 +774,7 @@
 
     <section id="home" class="hero-section">
         <div class="container hero-container">
-            <div class="hero-text">
+            <div class="hero-text reveal-right">
                 <h1>حيث تلتقي البرمجة بـ <span class="highlight">الإبداع الرقمي</span></h1>
                 <p>ندمج الكود الذكي بالتصميم الاحترافي لنصنع لعلامتك التجارية حضوراً رقمياً متكاملاً وقوياً.</p>
                 <div class="hero-buttons">
@@ -764,7 +782,7 @@
                     <a href="#contact" class="btn btn-secondary">ابدأ مشروعك الآن</a>
                 </div>
             </div>
-            <div class="hero-image">
+            <div class="hero-image reveal-left">
                 <div class="grid-box">
                     <div class="grid-item"><i class="fa-solid fa-code"></i></div>
                     <div class="grid-item"><i class="fa-solid fa-palette"></i></div>
@@ -777,22 +795,22 @@
 
     <section id="services" class="services-section">
         <div class="container">
-            <div class="section-title">
+            <div class="section-title reveal-fade">
                 <h2>ماذا نقدم في GridHub؟</h2>
                 <p>كل ما يحتاجه بيزنسك أو قناتك للنمو في مكان واحد</p>
             </div>
             <div class="services-grid">
-                <div class="service-card">
+                <div class="service-card reveal-fade" style="transition-delay: 0.1s;">
                     <div class="icon-box"><i class="fa-solid fa-laptop-code"></i></div>
                     <h3>برمجة وتطوير الويب</h3>
                     <p>تصميم وبرمجة مواقع ومتاجر إلكترونية سريعة، مودرن، ومتوافقة مع جميع الشاشات بأحدث التقنيات.</p>
                 </div>
-                <div class="service-card">
+                <div class="service-card reveal-fade" style="transition-delay: 0.2s;">
                     <div class="icon-box"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
                     <h3>التصميم والـ Thumbnails</h3>
                     <p>صناعة صور مصغرة (Thumbnails) جاذبة لليوتيوب، بوسترات إعلانية، وهوية بصرية كاملة لشركتك.</p>
                 </div>
-                <div class="service-card">
+                <div class="service-card reveal-fade" style="transition-delay: 0.3s;">
                     <div class="icon-box"><i class="fa-solid fa-bullhorn"></i></div>
                     <h3>إدارة صفحات السوشيال ميديا</h3>
                     <p>كتابة المحتوى، جدولة المنشورات, التفاعل مع الجمهور، وبناء خطة تسويقية تضمن لك الانتشار والنمو.</p>
@@ -803,7 +821,7 @@
 
     <section id="contact" class="contact-section">
         <div class="container">
-            <div class="contact-box">
+            <div class="contact-box reveal-zoom">
                 <h2>جاهز لتطوير مشروعك القادم?</h2>
                 <p>تواصل معنا اليوم ودعنا نحول أفكارك إلى واقع رقمي مبهر.</p>
 
@@ -849,6 +867,7 @@
     <footer>
         <div class="social-links">
             <a href="https://www.facebook.com/share/195ZucLcU5/" target="_blank" class="social-icon"><i class="fa-brands fa-facebook-f"></i></a>
+            <a href="https://vt.tiktok.com/ZSX8FeW2e/" target="_blank" class="social-icon"><i class="fa-brands fa-tiktok"></i></a>
         </div>
         <p>&copy; 2026 GridHub. جميع الحقوق محفوظة.</p>
     </footer>
@@ -937,6 +956,21 @@
                 window.location.href = "https://gridhub1.github.io/-/";
             });
         }
+
+        // تفعيل أنيميشن الـ Scroll Reveal الفاخر
+        const observerOptions = { root: null, rootMargin: '0px', threshold: 0.15 };
+        const scrollObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('reveal-visible');
+                    observer.unobserve(entry.target); // تشغيل الأنيميشن مرة واحدة فقط أثناء النزول لإضفاء طابع احترافي
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.reveal-fade, .reveal-left, .reveal-right, .reveal-zoom').forEach(el => {
+            scrollObserver.observe(el);
+        });
     </script>
 <script>(function(w,d, s, id) {if(typeof(w.webpushr)!=='undefined') return;w.webpushr=w.webpushr||function(){(w.webpushr.q=w.webpushr.q||[]).push(arguments)};var js, fjs = d.getElementsByTagName(s)[0];js = d.createElement(s); js.id = id;js.src = "https://cdn.webpushr.com/app.min.js";
 fjs.parentNode.appendChild(js);}(window,document, 'script', 'webpushr-jssdk-alternative'));
