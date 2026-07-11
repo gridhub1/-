@@ -747,14 +747,15 @@
            9. استايلات تأثيرات حركة التمرير الفاخرة (Scroll Reveal Animations)
            ========================================================================== */
         .reveal-fade, .reveal-left, .reveal-right, .reveal-zoom {
-            opacity: 0;
-            transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1), transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
-            will-change: transform, opacity;
+            /* تعديل: إيقاف تأثيرات الاختفاء والحركة عند السكرول لتظهر العناصر مباشرة بشكل طبيعي */
+            opacity: 1 !important;
+            transform: none !important;
+            transition: none !important;
         }
-        .reveal-fade { transform: translateY(50px); }
-        .reveal-left { transform: translateX(-60px); }
-        .reveal-right { transform: translateX(60px); }
-        .reveal-zoom { transform: scale(0.85); }
+        .reveal-fade { transform: none; }
+        .reveal-left { transform: none; }
+        .reveal-right { transform: none; }
+        .reveal-zoom { transform: none; }
 
         .reveal-visible {
             opacity: 1 !important;
@@ -929,8 +930,7 @@
             window.requestAnimationFrame(step);
         };
 
-        // المرحلة الأولى: صعود مبدئي سريع بمجرد تشغيل الـ JS
-        updateLoadingState(75, 1200);
+        // تعديل: تم إزالة حركة الـ Progress التلقائية العشوائية عند فتح الصفحة مباشرةً، لتبدأ وتكتمل فقط عند انتهاء التحميل الفعلي بالكامل.
 
         // إخفاء الـ Loader الفعلي بسلاسة تامة بعد وصول الصفحة لـ 100%
         const hideLoader = () => {
@@ -944,7 +944,7 @@
         // إطلاق الحدث الفعلي عند اكتمال تحميل كامل الموارد (الصور، الملفات الخارجية والفونتس)
         window.addEventListener('load', () => {
             isPageLoaded = true;
-            updateLoadingState(100, 300); // قفزة سريعة نهائية عند انتهاء التحميل الفعلي
+            updateLoadingState(100, 800); // يبدأ شريط التحميل ويتحرك بسرعة وسلاسة إلى 100% ويفتح الموقع فوراً بمجرد اكتمال العناصر
         });
 
         // حماية للمستخدم في حال تعطل سيرفر خارجي، لتجنب بقاء الشاشة معلقة
