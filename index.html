@@ -638,7 +638,7 @@
         }
 
         .pricing-price {
-            font-size: 3rem;
+            font-size: 2.5rem;
             font-weight: bold;
             color: var(--pure-white);
             margin-bottom: 10px;
@@ -660,6 +660,40 @@
             font-size: 0.95rem;
             margin-bottom: 30px;
             line-height: 1.5;
+        }
+
+        /* ستايل مخصص لخيارات التحديد المتعدد */
+        .select-service-wrapper {
+            background: rgba(0, 85, 255, 0.08);
+            border: 1px dashed rgba(0, 85, 255, 0.3);
+            border-radius: 14px;
+            padding: 12px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+        }
+        
+        .select-service-wrapper:hover {
+            background: rgba(0, 85, 255, 0.15);
+            border-color: var(--primary-blue);
+        }
+
+        .select-service-wrapper input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            accent-color: var(--primary-blue);
+        }
+
+        .select-service-wrapper label {
+            font-size: 1.05rem;
+            font-weight: bold;
+            color: var(--pure-white);
+            cursor: pointer;
         }
 
         .pricing-features {
@@ -875,9 +909,11 @@
                 animation: floatMobile 4s ease-in-out infinite alternate;
                 margin-bottom: 40px;
             }
-            @keyframes floatMobile {
-                0% { transform: translateY(0); }
-                100% { transform: translateY(-15px); }
+            @media screen and (max-width: 992px) {
+                @keyframes floatMobile {
+                    0% { transform: translateY(0); }
+                    100% { transform: translateY(-15px); }
+                }
             }
             .pricing-card.popular {
                 transform: none;
@@ -1053,7 +1089,7 @@
     <section id="services" class="services-section">
         <div class="container">
             <div class="section-title reveal-fade">
-                <h2>ماذا نقدم في GridHub؟</h2>
+                <h2>ماذا نقدم في GridHub?</h2>
                 <p>كل ما يحتاجه بيزنسك أو قناتك للنمو في مكان واحد</p>
             </div>
             <div class="services-grid">
@@ -1080,7 +1116,7 @@
         <div class="container">
             <div class="section-title reveal-fade">
                 <h2>خطط أسعار مرنة ومناسبة</h2>
-                <p>اختر الخطة المثالية لبدء طفرتك الرقمية اليوم مع فريقنا</p>
+                <p>اختر الخدمة أو الخدمات التي تحتاجها لبدء طفرتك الرقمية اليوم (يمكنك اختيار أكثر من خدمة معاً)</p>
             </div>
 
             <div class="pricing-toggle-wrapper reveal-fade">
@@ -1093,53 +1129,61 @@
             </div>
 
             <div class="pricing-grid">
-                <div class="pricing-card reveal-fade" style="transition-delay: 0.1s;">
+                <div class="pricing-card popular reveal-fade" style="transition-delay: 0.1s;">
                     <div class="pricing-header">
-                        <h3>الباقة الأساسية</h3>
-                        <div class="pricing-price" id="price-basic" data-monthly="49" data-yearly="39">49$<span>/ شهري</span></div>
-                        <p class="pricing-desc">الحل المثالي للأفراد والمشاريع الناشئة التي تبدأ أولى خطواتها الرقمية.</p>
+                        <h3>برمجة وتطوير الويب</h3>
+                        <div class="pricing-price" id="price-basic" data-monthly="2500" data-yearly="2000">2500 ج.م<span>/ شهري</span></div>
+                        <p class="pricing-desc">تطوير وبرمجة موقع إلكتروني احترافي متجاوب بالكامل مع الشاشات ومُهيب برمجياً.</p>
+                    </div>
+                    <div class="select-service-wrapper">
+                        <input type="checkbox" id="chk-programming" class="service-select-chk" value="برمجة وتطوير الويب">
+                        <label for="chk-programming">حدد هذه الخدمة</label>
                     </div>
                     <ul class="pricing-features">
-                        <li><i class="fa-solid fa-circle-check"></i> هوية بصرية وتصميم واحد</li>
-                        <li><i class="fa-solid fa-circle-check"></i> إدارة صفحة سوشيال ميديا واحدة</li>
-                        <li><i class="fa-solid fa-circle-check"></i> دعم فني متميز عبر البريد</li>
-                        <li class="disabled"><i class="fa-solid fa-circle-xmark"></i> برمجة موقع ويب خاص</li>
-                        <li class="disabled"><i class="fa-solid fa-circle-xmark"></i> استضافة مجانية وسريعة</li>
+                        <li><i class="fa-solid fa-circle-check"></i> برمجة موقع ويب Landing Page أو تعريفي</li>
+                        <li><i class="fa-solid fa-circle-check"></i> متوافق مع كافة الهواتف والشاشات</li>
+                        <li><i class="fa-solid fa-circle-check"></i> كود نظيف وسرعة تصفح فائقة</li>
+                        <li><i class="fa-solid fa-circle-check"></i> دعم فني متميز ومتابعة دورية</li>
                     </ul>
-                    <button class="btn-pricing btn-pricing-secondary" onclick="selectPlan('الباقة الأساسية')">اشتري الآن</button>
+                    <button class="btn btn-primary btn-pricing" onclick="triggerSelection()">اطلب الخدمات المحددة الآن</button>
                 </div>
 
                 <div class="pricing-card popular reveal-fade" style="transition-delay: 0.2s;">
-                    <div class="popular-tag">الأكثر طلباً</div>
                     <div class="pricing-header">
-                        <h3>الباقة المتقدمة</h3>
-                        <div class="pricing-price" id="price-premium" data-monthly="99" data-yearly="79">99$<span>/ شهري</span></div>
-                        <p class="pricing-desc">الخطة المتكاملة للشركات وصناع المحتوى الراغبين في انتشار وسيطرة كاملة.</p>
+                        <h3>الصور المصغرة والـ Thumbnails</h3>
+                        <div class="pricing-price" id="price-premium" data-monthly="1200" data-yearly="960">1200 ج.م<span>/ شهري</span></div>
+                        <p class="pricing-desc">تصاميم إبداعية كليك ب bait عالي تضمن رفع نسبة النقر إلى الظهور لـ CTR قناتك أو صفحتك.</p>
+                    </div>
+                    <div class="select-service-wrapper">
+                        <input type="checkbox" id="chk-thumbnails" class="service-select-chk" value="الصور المصغرة والـ Thumbnails">
+                        <label for="chk-thumbnails">حدد هذه الخدمة</label>
                     </div>
                     <ul class="pricing-features">
-                        <li><i class="fa-solid fa-circle-check"></i> تصاميم و Thumbnails غير محدودة</li>
-                        <li><i class="fa-solid fa-circle-check"></i> إدارة 3 صفحات سوشيال ميديا</li>
-                        <li><i class="fa-solid fa-circle-check"></i> برمجة موقع ويب Landing Page</li>
-                        <li><i class="fa-solid fa-circle-check"></i> دعم فني متواصل 24/7</li>
-                        <li class="disabled"><i class="fa-solid fa-circle-xmark"></i> متجر إلكتروني متكامل</li>
+                        <li><i class="fa-solid fa-circle-check"></i> تصاميم صور مصغرة لليوتيوب جذابة جداً</li>
+                        <li><i class="fa-solid fa-circle-check"></i> جودة فائقة وألوان سيبرانية متناسقة</li>
+                        <li><i class="fa-solid fa-circle-check"></i> تعديلات مرنة حتى نصل للشكل المثالي</li>
+                        <li><i class="fa-solid fa-circle-check"></i> تسليم سريع متوافق مع جدول رفع الفيديوهات</li>
                     </ul>
-                    <button class="btn btn-primary btn-pricing" onclick="selectPlan('الباقة المتقدمة')">اشترك الآن</button>
+                    <button class="btn btn-primary btn-pricing" onclick="triggerSelection()">اطلب الخدمات المحددة الآن</button>
                 </div>
 
-                <div class="pricing-card reveal-fade" style="transition-delay: 0.3s;">
+                <div class="pricing-card popular reveal-fade" style="transition-delay: 0.3s;">
                     <div class="pricing-header">
-                        <h3>باقة التميز VIP</h3>
-                        <div class="pricing-price" id="price-ultimate" data-monthly="199" data-yearly="159">199$<span>/ شهري</span></div>
-                        <p class="pricing-desc">نظام رقمي برميوم متكامل يبني حضور بيزنس سيبراني عملاق لا يُقهر.</p>
+                        <h3>إدارة صفحات السوشيال ميديا</h3>
+                        <div class="pricing-price" id="price-ultimate" data-monthly="1800" data-yearly="1440">1800 ج.م<span>/ شهري</span></div>
+                        <p class="pricing-desc">نظام متكامل لبناء حضور رقمي دائم وتفاعل حقيقي مع الجمهور على مختلف المنصات.</p>
+                    </div>
+                    <div class="select-service-wrapper">
+                        <input type="checkbox" id="chk-social" class="service-select-chk" value="إدارة صفحات السوشيال ميديا">
+                        <label for="chk-social">حدد هذه الخدمة</label>
                     </div>
                     <ul class="pricing-features">
-                        <li><i class="fa-solid fa-circle-check"></i> إدارة شاملة لكافة المنصات</li>
-                        <li><i class="fa-solid fa-circle-check"></i> متجر إلكتروني أو تطبيق ويب مخصص</li>
-                        <li><i class="fa-solid fa-circle-check"></i> خطة تسويقية ممولة واستشارات</li>
-                        <li><i class="fa-solid fa-circle-check"></i> استضافة فائقة السرعة مجاناً</li>
-                        <li><i class="fa-solid fa-circle-check"></i> مدير حساب خاص بمشروعك</li>
+                        <li><i class="fa-solid fa-circle-check"></i> كتابة منشورات تفاعلية جذابة وتسويقية</li>
+                        <li><i class="fa-solid fa-circle-check"></i> جدولة وتنسيق البوستات بانتظام</li>
+                        <li><i class="fa-solid fa-circle-check"></i> تحسين وزيادة التفاعل والوصول الأورجانيك</li>
+                        <li><i class="fa-solid fa-circle-check"></i> تقرير شهري لمتابعة أداء ونمو الصفحات</li>
                     </ul>
-                    <button class="btn-pricing btn-pricing-secondary" onclick="selectPlan('باقة التميز VIP')">امتلكها الآن</button>
+                    <button class="btn btn-primary btn-pricing" onclick="triggerSelection()">اطلب الخدمات المحددة الآن</button>
                 </div>
             </div>
         </div>
@@ -1148,7 +1192,7 @@
     <section id="contact" class="contact-section">
         <div class="container">
             <div class="contact-box reveal-zoom">
-                <h2>جاهز لتطوير مشروعك القادم?</h2>
+                <h2>جاهز لتطوير مشروعك القادم؟</h2>
                 <p>تواصل معنا اليوم ودعنا نحول أفكارك إلى واقع رقمي مبهر.</p>
 
                 <form class="cyber-form" id="cyberContactForm" action="https://formsubmit.co/GridHub200@gmail.com" method="POST">
@@ -1228,8 +1272,6 @@
             };
             window.requestAnimationFrame(step);
         };
-
-        // تعديل: تم إزالة حركة الـ Progress التلقائية العشوائية عند فتح الصفحة مباشرةً، لتبدأ وتكتمل فقط عند انتهاء التحميل الفعلي بالكامل.
 
         // إخفاء الـ Loader الفعلي بسلاسة تامة بعد وصول الصفحة لـ 100%
         const hideLoader = () => {
@@ -1341,16 +1383,16 @@
                     billYearlyLabel.classList.add('active');
                     billMonthlyLabel.classList.remove('active');
                     
-                    animatePrice(basicPrice, basicPrice.getAttribute('data-yearly'), '/ سنوي');
-                    animatePrice(premiumPrice, premiumPrice.getAttribute('data-yearly'), '/ سنوي');
-                    animatePrice(ultimatePrice, ultimatePrice.getAttribute('data-yearly'), '/ سنوي');
+                    animatePrice(basicPrice, basicPrice.getAttribute('data-yearly'), ' ج.م/ سنوي');
+                    animatePrice(premiumPrice, premiumPrice.getAttribute('data-yearly'), ' ج.م/ سنوي');
+                    animatePrice(ultimatePrice, ultimatePrice.getAttribute('data-yearly'), ' ج.م/ سنوي');
                 } else {
                     billMonthlyLabel.classList.add('active');
                     billYearlyLabel.classList.remove('active');
                     
-                    animatePrice(basicPrice, basicPrice.getAttribute('data-monthly'), '/ شهري');
-                    animatePrice(premiumPrice, premiumPrice.getAttribute('data-monthly'), '/ شهري');
-                    animatePrice(ultimatePrice, ultimatePrice.getAttribute('data-monthly'), '/ شهري');
+                    animatePrice(basicPrice, basicPrice.getAttribute('data-monthly'), ' ج.م/ شهري');
+                    animatePrice(premiumPrice, premiumPrice.getAttribute('data-monthly'), ' ج.م/ شهري');
+                    animatePrice(ultimatePrice, ultimatePrice.getAttribute('data-monthly'), ' ج.م/ شهري');
                 }
             });
         }
@@ -1359,16 +1401,34 @@
             element.style.opacity = '0';
             element.style.transform = 'scale(0.8)';
             setTimeout(() => {
-                element.innerHTML = `${finalValue}$<span>${text}</span>`;
+                element.innerHTML = `${finalValue}<span>${text}</span>`;
                 element.style.opacity = '1';
                 element.style.transform = 'scale(1)';
             }, 200);
         }
 
-        function selectPlan(planName) {
+        // دالة تجميع الخدمات المحددة وإرسالها إلى صندوق التواصل
+        function triggerSelection() {
+            const checkedBoxes = document.querySelectorAll('.service-select-chk:checked');
             const messageInput = document.getElementById('message');
+            
+            if(checkedBoxes.length === 0) {
+                alert('برجاء تحديد خدمة واحدة على الأقل بالضغط على مربع التحديد داخل بطاقة الخدمة.');
+                return;
+            }
+
+            let selectedServices = [];
+            checkedBoxes.forEach(cb => {
+                selectedServices.push(cb.value);
+            });
+
+            const billingType = pricingCheckbox.checked ? 'السنوي' : 'الشهري';
+            
             if(messageInput) {
-                messageInput.value = `مرحباً GridHub، أنا مهتم بالاشتراك في (${planName})، وأرغب في مناقشة تفاصيل مشروعي معكم...`;
+                messageInput.value = `مرحباً GridHub، أنا مهتم بالاشتراك في الخدمات التالية بنظام الدفع (${billingType}):\n` + 
+                                     selectedServices.map(s => `- ${s}`).join('\n') + 
+                                     `\n\nوأرغب في مناقشة تفاصيل مشروعي معكم لبدء العمل...`;
+                
                 document.getElementById('contact').scrollIntoView({ behavior: 'smooth' });
                 messageInput.focus();
             }
