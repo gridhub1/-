@@ -661,6 +661,62 @@
             .grid-box { grid-template-columns: repeat(2, 130px); gap: 15px; }
             .grid-item { width: 130px; height: 130px; font-size: 2.4rem; }
         }
+
+        /* ==========================================================================
+           8. استايل نافذة الشكر والترحيب (Thank You Modal Style)
+           ========================================================================== */
+        .thankyou-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(2, 8, 19, 0.85);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 999999;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease;
+        }
+        .thankyou-modal.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .thankyou-card {
+            background: linear-gradient(135deg, #0a2240 0%, #020813 100%);
+            border: 2px solid var(--primary-blue);
+            box-shadow: 0 0 30px rgba(0, 85, 255, 0.4);
+            padding: 40px;
+            border-radius: 28px;
+            text-align: center;
+            max-width: 500px;
+            width: 90%;
+            transform: scale(0.7);
+            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .thankyou-modal.show .thankyou-card {
+            transform: scale(1);
+        }
+        .thankyou-card img {
+            height: 80px;
+            margin-bottom: 20px;
+            filter: drop-shadow(0 0 15px rgba(0, 85, 255, 0.6));
+        }
+        .thankyou-card h3 {
+            font-size: 2.2rem;
+            color: var(--pure-white);
+            margin-bottom: 15px;
+        }
+        .thankyou-card p {
+            color: var(--text-muted);
+            font-size: 1.15rem;
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
     </style>
 </head>
 <body>
@@ -751,7 +807,7 @@
                 <h2>جاهز لتطوير مشروعك القادم?</h2>
                 <p>تواصل معنا اليوم ودعنا نحول أفكارك إلى واقع رقمي مبهر.</p>
 
-                <form class="cyber-form" action="https://formsubmit.co/GridHub200@gmail.com" method="POST">
+                <form class="cyber-form" id="cyberContactForm" action="https://formsubmit.co/GridHub200@gmail.com" method="POST">
                     
                     <input type="hidden" name="_subject" value="رسالة جديدة من موقع GridHub!">
                     <input type="hidden" name="_template" value="box">
@@ -780,6 +836,15 @@
             </div>
         </div>
     </section>
+
+    <div class="thankyou-modal" id="thankYouModal">
+        <div class="thankyou-card">
+            <img src="https://i.ibb.co/MyhstGh0/Picsart-26-07-10-23-47-06-393.png" alt="GridHub Logo">
+            <h3>شكراً لتواصلك معنا!</h3>
+            <p>أهلاً بك في عائلة GridHub الرقمية. تم استلام تفاصيل رسالتك بنجاح، وسيقوم فريقنا بمراجعتها والتواصل معك في أقرب وقت ممكن عبر البريد الإلكتروني لنبدأ رحلة الإبداع معاً.</p>
+            <button class="btn btn-primary" id="closeModalBtn">موافق</button>
+        </div>
+    </div>
 
     <footer>
         <div class="social-links">
@@ -843,6 +908,35 @@
                 }
             });
         });
+
+        // تشغيل وإرسال الفورم متبوعاً بنافذة الشكر والترحيب المبهرة
+        const cyberForm = document.getElementById('cyberContactForm');
+        const thankYouModal = document.getElementById('thankYouModal');
+        const closeModalBtn = document.getElementById('closeModalBtn');
+
+        if(cyberForm && thankYouModal && closeModalBtn) {
+            cyberForm.addEventListener('submit', function(e) {
+                e.preventDefault(); // إيقاف الانتقال الافتراضي اللحظي لمشاهدة الترحيب أولاً
+                
+                // إرسال البيانات بشكل صامت في الخلفية لـ FormSubmit دون تشتيت الزائر
+                const formData = new FormData(cyberForm);
+                fetch(cyberForm.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: { 'Accept': 'application/json' }
+                });
+
+                // إظهار نافذة الشكر الفخمة مباشرة
+                thankYouModal.classList.add('show');
+                cyberForm.reset(); // تفريغ الخانات بنقاء بعد الإرسال
+            });
+
+            // إغلاق النافذة وتحديث الصفحة عند الضغط على زر موافق للعودة للموقع الأصلي
+            closeModalBtn.addEventListener('click', function() {
+                thankYouModal.classList.remove('show');
+                window.location.href = "https://gridhub1.github.io/-/";
+            });
+        }
     </script>
 <script>(function(w,d, s, id) {if(typeof(w.webpushr)!=='undefined') return;w.webpushr=w.webpushr||function(){(w.webpushr.q=w.webpushr.q||[]).push(arguments)};var js, fjs = d.getElementsByTagName(s)[0];js = d.createElement(s); js.id = id;js.src = "https://cdn.webpushr.com/app.min.js";
 fjs.parentNode.appendChild(js);}(window,document, 'script', 'webpushr-jssdk-alternative'));
