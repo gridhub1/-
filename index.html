@@ -339,6 +339,7 @@
             font-size: 1.1rem;
             transition: var(--transition-smooth);
             cursor: pointer;
+            border: none;
         }
 
         .btn-primary {
@@ -1067,11 +1068,16 @@
 
     <div class="auth-modal" id="authModal">
         <div class="auth-card">
-            <h3 style="color:white; margin-bottom: 20px;">تسجيل الدخول</h3>
+            <h3 style="color:white; margin-bottom: 20px;">تسجيل الدخول / إنشاء حساب</h3>
+            <button class="btn" style="width:100%; background:#4285F4; color:white; margin-bottom:10px" onclick="socialLogin('google')"><i class="fa-brands fa-google"></i> الدخول عبر جوجل</button>
+            <button class="btn" style="width:100%; background:#3b5998; color:white; margin-bottom:20px" onclick="socialLogin('facebook')"><i class="fa-brands fa-facebook"></i> الدخول عبر فيسبوك</button>
+            
+            <div style="border-top:1px solid #334; margin:20px 0;"></div>
+            
             <input type="email" id="loginEmail" placeholder="البريد الإلكتروني" class="cyber-input" style="margin-bottom:15px">
             <input type="password" id="loginPass" placeholder="كلمة المرور" class="cyber-input" style="margin-bottom:20px">
-            <button class="btn btn-primary" style="width:100%" onclick="handleLogin()">دخول الآن</button>
-            <button class="btn btn-secondary" style="width:100%; margin-top:10px" onclick="document.getElementById('authModal').classList.remove('show')">إغلاق</button>
+            <button class="btn btn-primary" style="width:100%" onclick="handleLogin()">دخول / إنشاء حساب بالبريد</button>
+            <button class="btn" style="width:100%; margin-top:10px; background:rgba(255,255,255,0.1)" onclick="document.getElementById('authModal').classList.remove('show')">إغلاق</button>
         </div>
     </div>
 
@@ -1155,7 +1161,7 @@
                         <li><i class="fa-solid fa-circle-check"></i> كود نظيف وسرعة تصفح فائقة</li>
                         <li><i class="fa-solid fa-circle-check"></i> دعم فني متميز ومتابعة دورية</li>
                     </ul>
-                    <button class="btn btn-primary btn-pricing" onclick="triggerSelection()">اطلب الخدمات المحددة الآن</button>
+                    <button class="btn btn-primary btn-pricing" onclick="checkAuthAndProceed()">اطلب الخدمات المحددة الآن</button>
                 </div>
 
                 <div class="pricing-card popular reveal-fade" style="transition-delay: 0.2s;">
@@ -1174,7 +1180,7 @@
                         <li><i class="fa-solid fa-circle-check"></i> تعديلات مرنة حتى نصل للشكل المثالي</li>
                         <li><i class="fa-solid fa-circle-check"></i> تسليم سريع متوافق مع جدول رفع الفيديوهات</li>
                     </ul>
-                    <button class="btn btn-primary btn-pricing" onclick="triggerSelection()">اطلب الخدمات المحددة الآن</button>
+                    <button class="btn btn-primary btn-pricing" onclick="checkAuthAndProceed()">اطلب الخدمات المحددة الآن</button>
                 </div>
 
                 <div class="pricing-card popular reveal-fade" style="transition-delay: 0.3s;">
@@ -1193,7 +1199,7 @@
                         <li><i class="fa-solid fa-circle-check"></i> تحسين وزيادة التفاعل والوصول الأورجانيك</li>
                         <li><i class="fa-solid fa-circle-check"></i> تقرير شهري لمتابعة أداء ونمو الصفحات</li>
                     </ul>
-                    <button class="btn btn-primary btn-pricing" onclick="triggerSelection()">اطلب الخدمات المحددة الآن</button>
+                    <button class="btn btn-primary btn-pricing" onclick="checkAuthAndProceed()">اطلب الخدمات المحددة الآن</button>
                 </div>
             </div>
         </div>
@@ -1256,27 +1262,41 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <script>
-        // إعداد الاتصال بـ Supabase
         const supabaseUrl = 'https://lookpfifqnpznuhjnmmp.supabase.co';
         const supabaseKey = 'sb_publishable_ooBRDKkNixnZFYJ-5Am5tA_QybONhv8';
         const _supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
-        // دالة الدخول
+        // التحقق من الدخول قبل الإرسال
+        async function checkAuthAndProceed() {
+            const { data: { user } } = await _supabase.auth.getUser();
+            if (!user) {
+                alert("يرجى تسجيل الدخول أولاً لإتمام طلبك.");
+                document.getElementById('authModal').classList.add('show');
+            } else {
+                triggerSelection();
+            }
+        }
+
+        // تسجيل الدخول بالبريد
         async function handleLogin() {
             const email = document.getElementById('loginEmail').value;
             const password = document.getElementById('loginPass').value;
-            const { data, error } = await _supabase.auth.signInWithPassword({ email, password });
-            if (error) alert("خطأ: " + error.message);
-            else { alert("تم تسجيل الدخول بنجاح!"); document.getElementById('authModal').classList.remove('show'); }
+            const { data, error } = await _supabase.auth.signUp({ email, password });
+            if (error) {
+                const { data, error: signInError } = await _supabase.auth.signInWithPassword({ email, password });
+                if (signInError) alert("خطأ: " + signInError.message);
+                else { alert("تم تسجيل الدخول بنجاح!"); document.getElementById('authModal').classList.remove('show'); }
+            } else { alert("تم إنشاء حسابك بنجاح!"); document.getElementById('authModal').classList.remove('show'); }
         }
 
-        // تفعيل نافذة الدخول
-        document.getElementById('loginTrigger').addEventListener('click', (e) => {
-            e.preventDefault();
-            document.getElementById('authModal').classList.add('show');
-        });
+        // تسجيل الدخول عبر التواصل الاجتماعي
+        async function socialLogin(provider) {
+            await _supabase.auth.signInWithOAuth({ provider: provider });
+        }
 
-        // نظام التحميل الذكي
+        document.getElementById('loginTrigger').addEventListener('click', (e) => { e.preventDefault(); document.getElementById('authModal').classList.add('show'); });
+
+        // باقي الوظائف (Loader, UI logic, etc.) كما هي
         let currentProgress = 0;
         let isPageLoaded = false;
         const counterEl = document.getElementById('loadCounter');
@@ -1285,45 +1305,26 @@
         const updateLoadingState = (targetProgress, duration) => {
             let startTimestamp = null;
             const startProgress = currentProgress;
-
             const step = (timestamp) => {
                 if (!startTimestamp) startTimestamp = timestamp;
                 const elapsed = timestamp - startTimestamp;
                 const progressRatio = Math.min(elapsed / duration, 1);
-                
                 currentProgress = startProgress + (targetProgress - startProgress) * progressRatio;
-                
                 if (counterEl) counterEl.innerText = Math.floor(currentProgress);
                 if (progressBarEl) progressBarEl.style.width = currentProgress + '%';
-
-                if (progressRatio < 1 && currentProgress < targetProgress) {
-                    window.requestAnimationFrame(step);
-                } else if (isPageLoaded && currentProgress >= 100) {
-                    hideLoader();
-                }
+                if (progressRatio < 1 && currentProgress < targetProgress) window.requestAnimationFrame(step);
+                else if (isPageLoaded && currentProgress >= 100) hideLoader();
             };
             window.requestAnimationFrame(step);
         };
 
         const hideLoader = () => {
             const loader = document.getElementById('loader');
-            if(loader) {
-                loader.style.opacity = '0';
-                setTimeout(() => { loader.style.display = 'none'; }, 800);
-            }
+            if(loader) { loader.style.opacity = '0'; setTimeout(() => { loader.style.display = 'none'; }, 800); }
         };
 
-        window.addEventListener('load', () => {
-            isPageLoaded = true;
-            updateLoadingState(100, 800);
-        });
-
-        setTimeout(() => {
-            if(!isPageLoaded) {
-                isPageLoaded = true;
-                updateLoadingState(100, 200);
-            }
-        }, 5000);
+        window.addEventListener('load', () => { isPageLoaded = true; updateLoadingState(100, 800); });
+        setTimeout(() => { if(!isPageLoaded) { isPageLoaded = true; updateLoadingState(100, 200); } }, 5000);
 
         const menuBtn = document.getElementById('menuBtn');
         const navbar = document.getElementById('navbar');
@@ -1346,22 +1347,10 @@
 
         const sections = document.querySelectorAll('section');
         const navLinks = document.querySelectorAll('.nav-link');
-        
         window.addEventListener('scroll', () => {
             let current = '';
-            sections.forEach(section => {
-                const sectionTop = section.offsetTop;
-                if (window.scrollY >= (sectionTop - 160)) {
-                    current = section.getAttribute('id');
-                }
-            });
-
-            navLinks.forEach(link => {
-                link.classList.remove('active');
-                if (link.getAttribute('href').includes(current)) {
-                    link.classList.add('active');
-                }
-            });
+            sections.forEach(section => { const sectionTop = section.offsetTop; if (window.scrollY >= (sectionTop - 160)) current = section.getAttribute('id'); });
+            navLinks.forEach(link => { link.classList.remove('active'); if (link.getAttribute('href').includes(current)) link.classList.add('active'); });
         });
 
         const cyberForm = document.getElementById('cyberContactForm');
@@ -1371,40 +1360,21 @@
         if(cyberForm && thankYouModal && closeModalBtn) {
             cyberForm.addEventListener('submit', async function(e) {
                 e.preventDefault();
-                
                 const clientName = document.getElementById('name').value;
                 const clientEmail = document.getElementById('email').value;
                 const clientMessage = document.getElementById('message').value;
-
-                try {
-                    await _supabase.from('contacts').insert([
-                        { name: clientName, email: clientEmail, message: clientMessage }
-                    ]);
-                } catch (error) {
-                    console.error("Supabase Error:", error);
-                }
-
+                try { await _supabase.from('contacts').insert([{ name: clientName, email: clientEmail, message: clientMessage }]); } catch (error) { console.error("Supabase Error:", error); }
                 const formData = new FormData(cyberForm);
-                fetch(cyberForm.action, {
-                    method: 'POST',
-                    body: formData,
-                    headers: { 'Accept': 'application/json' }
-                });
-
+                fetch(cyberForm.action, { method: 'POST', body: formData, headers: { 'Accept': 'application/json' } });
                 thankYouModal.classList.add('show');
                 cyberForm.reset();
             });
-
-            closeModalBtn.addEventListener('click', function() {
-                thankYouModal.classList.remove('show');
-                window.location.href = "https://gridhub1.github.io/-/";
-            });
+            closeModalBtn.addEventListener('click', function() { thankYouModal.classList.remove('show'); window.location.href = "https://gridhub1.github.io/-/"; });
         }
 
         const pricingCheckbox = document.getElementById('pricing-checkbox');
         const billMonthlyLabel = document.getElementById('billing-monthly');
         const billYearlyLabel = document.getElementById('billing-yearly');
-        
         const basicPrice = document.getElementById('price-basic');
         const premiumPrice = document.getElementById('price-premium');
         const ultimatePrice = document.getElementById('price-ultimate');
@@ -1414,14 +1384,12 @@
                 if(this.checked) {
                     billYearlyLabel.classList.add('active');
                     billMonthlyLabel.classList.remove('active');
-                    
                     animatePrice(basicPrice, basicPrice.getAttribute('data-yearly'), ' ج.م/ سنوي');
                     animatePrice(premiumPrice, premiumPrice.getAttribute('data-yearly'), ' ج.م/ سنوي');
                     animatePrice(ultimatePrice, ultimatePrice.getAttribute('data-yearly'), ' ج.م/ سنوي');
                 } else {
                     billMonthlyLabel.classList.add('active');
                     billYearlyLabel.classList.remove('active');
-                    
                     animatePrice(basicPrice, basicPrice.getAttribute('data-monthly'), ' ج.م/ شهري');
                     animatePrice(premiumPrice, premiumPrice.getAttribute('data-monthly'), ' ج.م/ شهري');
                     animatePrice(ultimatePrice, ultimatePrice.getAttribute('data-monthly'), ' ج.م/ شهري');
@@ -1432,34 +1400,18 @@
         function animatePrice(element, finalValue, text) {
             element.style.opacity = '0';
             element.style.transform = 'scale(0.8)';
-            setTimeout(() => {
-                element.innerHTML = `${finalValue}<span>${text}</span>`;
-                element.style.opacity = '1';
-                element.style.transform = 'scale(1)';
-            }, 200);
+            setTimeout(() => { element.innerHTML = `${finalValue}<span>${text}</span>`; element.style.opacity = '1'; element.style.transform = 'scale(1)'; }, 200);
         }
 
         function triggerSelection() {
             const checkedBoxes = document.querySelectorAll('.service-select-chk:checked');
             const messageInput = document.getElementById('message');
-            
-            if(checkedBoxes.length === 0) {
-                alert('برجاء تحديد خدمة واحدة على الأقل بالضغط على مربع التحديد داخل بطاقة الخدمة.');
-                return;
-            }
-
+            if(checkedBoxes.length === 0) { alert('برجاء تحديد خدمة واحدة على الأقل بالضغط على مربع التحديد داخل بطاقة الخدمة.'); return; }
             let selectedServices = [];
-            checkedBoxes.forEach(cb => {
-                selectedServices.push(cb.value);
-            });
-
+            checkedBoxes.forEach(cb => { selectedServices.push(cb.value); });
             const billingType = pricingCheckbox.checked ? 'السنوي' : 'الشهري';
-            
             if(messageInput) {
-                messageInput.value = `مرحباً GridHub، أنا مهتم بالاشتراك في الخدمات التالية بنظام الدفع (${billingType}):\n` + 
-                                     selectedServices.map(s => `- ${s}`).join('\n') + 
-                                     `\n\nوأرغب في مناقشة تفاصيل مشروعي معكم لبدء العمل...`;
-                
+                messageInput.value = `مرحباً GridHub، أنا مهتم بالاشتراك في الخدمات التالية بنظام الدفع (${billingType}):\n` + selectedServices.map(s => `- ${s}`).join('\n') + `\n\nوأرغب في مناقشة تفاصيل مشروعي معكم لبدء العمل...`;
                 document.getElementById('contact').scrollIntoView({ behavior: 'smooth' });
                 messageInput.focus();
             }
@@ -1467,17 +1419,9 @@
 
         const observerOptions = { root: null, rootMargin: '0px', threshold: 0.15 };
         const scrollObserver = new IntersectionObserver((entries, observer) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('reveal-visible');
-                    observer.unobserve(entry.target);
-                }
-            });
+            entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('reveal-visible'); observer.unobserve(entry.target); } });
         }, observerOptions);
-
-        document.querySelectorAll('.reveal-fade, .reveal-left, .reveal-right, .reveal-zoom').forEach(el => {
-            scrollObserver.observe(el);
-        });
+        document.querySelectorAll('.reveal-fade, .reveal-left, .reveal-right, .reveal-zoom').forEach(el => { scrollObserver.observe(el); });
     </script>
 <script>(function(w,d, s, id) {if(typeof(w.webpushr)!=='undefined') return;w.webpushr=w.webpushr||function(){(w.webpushr.q=w.webpushr.q||[]).push(arguments)};var js, fjs = d.getElementsByTagName(s)[0];js = d.createElement(s); js.id = id;js.src = "https://cdn.webpushr.com/app.min.js";
 fjs.parentNode.appendChild(js);}(window,document, 'script', 'webpushr-jssdk-alternative'));
