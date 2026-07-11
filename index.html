@@ -1004,7 +1004,7 @@
         .thankyou-card p {
             color: var(--text-muted);
             font-size: 1.15rem;
-            line-height: 1.6;
+            line-6: 1.6;
             margin-bottom: 25px;
         }
 
@@ -1243,7 +1243,14 @@
         <p>&copy; 2026 GridHub. جميع الحقوق محفوظة.</p>
     </footer>
 
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
     <script>
+        // إعداد الاتصال بـ Supabase باستخدام المعرف والانون الخاصين بمشروعك
+        const supabaseUrl = 'https://lookpfifqnpznuhjnmmp.supabase.co';
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imxvb2twZmlmcW5wem51aGpubW1wIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM3NjUxMTAsImV4cCI6MjA5OTM0MTExMH0.UWOdvP1yXGIS04x3WuYZNSpEiRbTGrOYFmANDXfy5Go';
+        const _supabase = supabase.createClient(supabaseUrl, supabaseKey);
+
         // نظام التحميل الذكي المرتبط بحالة عناصر الموقع الفعلية
         let currentProgress = 0;
         let isPageLoaded = false;
@@ -1339,15 +1346,28 @@
             });
         });
 
-        // تشغيل وإرسال الفورم متبوعاً بنافذة الشكر والترحيب المبهرة
+        // تشغيل وإرسال الفورم متبوعاً بنافذة الشكر والترحيب المبهرة وحفظ البيانات في سوبابيز
         const cyberForm = document.getElementById('cyberContactForm');
         const thankYouModal = document.getElementById('thankYouModal');
         const closeModalBtn = document.getElementById('closeModalBtn');
 
         if(cyberForm && thankYouModal && closeModalBtn) {
-            cyberForm.addEventListener('submit', function(e) {
+            cyberForm.addEventListener('submit', async function(e) {
                 e.preventDefault(); // إيقاف الانتقال الافتراضي اللحظي لمشاهدة الترحيب أولاً
                 
+                const clientName = document.getElementById('name').value;
+                const clientEmail = document.getElementById('email').value;
+                const clientMessage = document.getElementById('message').value;
+
+                // إرسال البيانات إلى جدول السوبابيز المسمى (contacts) في الخلفية
+                try {
+                    await _supabase.from('contacts').insert([
+                        { name: clientName, email: clientEmail, message: clientMessage }
+                    ]);
+                } catch (error) {
+                    console.error("Supabase Error:", error);
+                }
+
                 // إرسال البيانات بشكل صامت في الخلفية لـ FormSubmit دون تشتيت الزائر
                 const formData = new FormData(cyberForm);
                 fetch(cyberForm.action, {
