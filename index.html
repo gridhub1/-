@@ -338,6 +338,7 @@
             font-weight: bold;
             font-size: 1.1rem;
             transition: var(--transition-smooth);
+            cursor: pointer;
         }
 
         .btn-primary {
@@ -955,7 +956,7 @@
         /* ==========================================================================
            8. استايل نافذة الشكر والترحيب (Thank You Modal Style)
            ========================================================================== */
-        .thankyou-modal {
+        .thankyou-modal, .auth-modal {
             position: fixed;
             top: 0;
             left: 0;
@@ -972,11 +973,11 @@
             pointer-events: none;
             transition: opacity 0.5s ease;
         }
-        .thankyou-modal.show {
+        .thankyou-modal.show, .auth-modal.show {
             opacity: 1;
             pointer-events: auto;
         }
-        .thankyou-card {
+        .thankyou-card, .auth-card {
             background: linear-gradient(135deg, #0a2240 0%, #020813 100%);
             border: 2px solid var(--primary-blue);
             box-shadow: 0 0 30px rgba(0, 85, 255, 0.4);
@@ -988,7 +989,7 @@
             transform: scale(0.7);
             transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
-        .thankyou-modal.show .thankyou-card {
+        .thankyou-modal.show .thankyou-card, .auth-modal.show .auth-card {
             transform: scale(1);
         }
         .thankyou-card img {
@@ -1058,10 +1059,21 @@
                     <li><a href="#services" class="nav-link">خدماتنا</a></li>
                     <li><a href="#pricing" class="nav-link">الأسعار</a></li>
                     <li><a href="#contact" class="nav-link">تواصل معنا</a></li>
+                    <li><a href="#" id="loginTrigger" style="color:var(--primary-blue)">دخول</a></li>
                 </ul>
             </nav>
         </div>
     </header>
+
+    <div class="auth-modal" id="authModal">
+        <div class="auth-card">
+            <h3 style="color:white; margin-bottom: 20px;">تسجيل الدخول</h3>
+            <input type="email" id="loginEmail" placeholder="البريد الإلكتروني" class="cyber-input" style="margin-bottom:15px">
+            <input type="password" id="loginPass" placeholder="كلمة المرور" class="cyber-input" style="margin-bottom:20px">
+            <button class="btn btn-primary" style="width:100%" onclick="handleLogin()">دخول الآن</button>
+            <button class="btn btn-secondary" style="width:100%; margin-top:10px" onclick="document.getElementById('authModal').classList.remove('show')">إغلاق</button>
+        </div>
+    </div>
 
     <section id="home" class="hero-section">
         <div class="container hero-container">
@@ -1244,12 +1256,27 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <script>
-        // إعداد الاتصال بـ Supabase باستخدام المعرف والانون الخاصين بمشروعك
+        // إعداد الاتصال بـ Supabase
         const supabaseUrl = 'https://lookpfifqnpznuhjnmmp.supabase.co';
         const supabaseKey = 'sb_publishable_ooBRDKkNixnZFYJ-5Am5tA_QybONhv8';
         const _supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
-        // نظام التحميل الذكي المرتبط بحالة عناصر الموقع الفعلية
+        // دالة الدخول
+        async function handleLogin() {
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPass').value;
+            const { data, error } = await _supabase.auth.signInWithPassword({ email, password });
+            if (error) alert("خطأ: " + error.message);
+            else { alert("تم تسجيل الدخول بنجاح!"); document.getElementById('authModal').classList.remove('show'); }
+        }
+
+        // تفعيل نافذة الدخول
+        document.getElementById('loginTrigger').addEventListener('click', (e) => {
+            e.preventDefault();
+            document.getElementById('authModal').classList.add('show');
+        });
+
+        // نظام التحميل الذكي
         let currentProgress = 0;
         let isPageLoaded = false;
         const counterEl = document.getElementById('loadCounter');
@@ -1278,7 +1305,6 @@
             window.requestAnimationFrame(step);
         };
 
-        // إخفاء الـ Loader الفعلي بسلاسة تامة بعد وصول الصفحة لـ 100%
         const hideLoader = () => {
             const loader = document.getElementById('loader');
             if(loader) {
@@ -1287,13 +1313,11 @@
             }
         };
 
-        // إطلاق الحدث الفعلي عند اكتمال تحميل كامل الموارد (الصور، الملفات الخارجية والفونتس)
         window.addEventListener('load', () => {
             isPageLoaded = true;
-            updateLoadingState(100, 800); // يبدأ شريط التحميل ويتحرك بسرعة وسلاسة إلى 100% ويفتح الموقع فوراً بمجرد اكتمال العناصر
+            updateLoadingState(100, 800);
         });
 
-        // حماية للمستخدم في حال تعطل سيرفر خارجي، لتجنب بقاء الشاشة معلقة
         setTimeout(() => {
             if(!isPageLoaded) {
                 isPageLoaded = true;
@@ -1301,7 +1325,6 @@
             }
         }, 5000);
 
-        // قائمة الموبايل (Hamburger Menu)
         const menuBtn = document.getElementById('menuBtn');
         const navbar = document.getElementById('navbar');
         if(menuBtn && navbar) {
@@ -1311,7 +1334,6 @@
                 icon.classList.toggle('fa-bars');
                 icon.classList.toggle('fa-xmark');
             });
-            // إغلاق القائمة تلقائياً عند الضغط على أي رابط
             document.querySelectorAll('nav ul li a').forEach(link => {
                 link.addEventListener('click', () => {
                     navbar.classList.remove('open');
@@ -1322,7 +1344,6 @@
             });
         }
 
-        // تتبع السكرول لتحديث روابط القائمة النشطة تلقائياً (Active Navigation)
         const sections = document.querySelectorAll('section');
         const navLinks = document.querySelectorAll('.nav-link');
         
@@ -1330,7 +1351,6 @@
             let current = '';
             sections.forEach(section => {
                 const sectionTop = section.offsetTop;
-                const sectionHeight = section.clientHeight;
                 if (window.scrollY >= (sectionTop - 160)) {
                     current = section.getAttribute('id');
                 }
@@ -1344,20 +1364,18 @@
             });
         });
 
-        // تشغيل وإرسال الفورم متبوعاً بنافذة الشكر والترحيب المبهرة وحفظ البيانات في سوبابيز
         const cyberForm = document.getElementById('cyberContactForm');
         const thankYouModal = document.getElementById('thankYouModal');
         const closeModalBtn = document.getElementById('closeModalBtn');
 
         if(cyberForm && thankYouModal && closeModalBtn) {
             cyberForm.addEventListener('submit', async function(e) {
-                e.preventDefault(); // إيقاف الانتقال الافتراضي اللحظي لمشاهدة الترحيب أولاً
+                e.preventDefault();
                 
                 const clientName = document.getElementById('name').value;
                 const clientEmail = document.getElementById('email').value;
                 const clientMessage = document.getElementById('message').value;
 
-                // إرسال البيانات إلى جدول السوبابيز المسمى (contacts) في الخلفية
                 try {
                     await _supabase.from('contacts').insert([
                         { name: clientName, email: clientEmail, message: clientMessage }
@@ -1366,7 +1384,6 @@
                     console.error("Supabase Error:", error);
                 }
 
-                // إرسال البيانات بشكل صامت في الخلفية لـ FormSubmit دون تشتيت الزائر
                 const formData = new FormData(cyberForm);
                 fetch(cyberForm.action, {
                     method: 'POST',
@@ -1374,19 +1391,16 @@
                     headers: { 'Accept': 'application/json' }
                 });
 
-                // إظهار نافذة الشكر الفخمة مباشرة
                 thankYouModal.classList.add('show');
-                cyberForm.reset(); // تفريغ الخانات بنقاء بعد الإرسال
+                cyberForm.reset();
             });
 
-            // إغلاق النافذة وتحديث الصفحة عند الضغط على زر موافق للعودة للموقع الأصلي
             closeModalBtn.addEventListener('click', function() {
                 thankYouModal.classList.remove('show');
                 window.location.href = "https://gridhub1.github.io/-/";
             });
         }
 
-        // جافا سكريبت التفاعلية الجديدة كلياً لقسم الأسعار والتحويل الجبار
         const pricingCheckbox = document.getElementById('pricing-checkbox');
         const billMonthlyLabel = document.getElementById('billing-monthly');
         const billYearlyLabel = document.getElementById('billing-yearly');
@@ -1410,7 +1424,7 @@
                     
                     animatePrice(basicPrice, basicPrice.getAttribute('data-monthly'), ' ج.م/ شهري');
                     animatePrice(premiumPrice, premiumPrice.getAttribute('data-monthly'), ' ج.م/ شهري');
-                    animatePrice(ultimatePrice, ultimatePrice.getAttribute('data-monthly'), ' ج.m/ شهري');
+                    animatePrice(ultimatePrice, ultimatePrice.getAttribute('data-monthly'), ' ج.م/ شهري');
                 }
             });
         }
@@ -1425,7 +1439,6 @@
             }, 200);
         }
 
-        // دالة تجميع الخدمات المحددة وإرسالها إلى صندوق التواصل
         function triggerSelection() {
             const checkedBoxes = document.querySelectorAll('.service-select-chk:checked');
             const messageInput = document.getElementById('message');
@@ -1452,13 +1465,12 @@
             }
         }
 
-        // تفعيل أنيميشن الـ Scroll Reveal الفاخر
         const observerOptions = { root: null, rootMargin: '0px', threshold: 0.15 };
         const scrollObserver = new IntersectionObserver((entries, observer) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     entry.target.classList.add('reveal-visible');
-                    observer.unobserve(entry.target); // تشغيل الأنيميشن مرة واحدة فقط أثناء النزول لإضفاء طابع احترافي
+                    observer.unobserve(entry.target);
                 }
             });
         }, observerOptions);
