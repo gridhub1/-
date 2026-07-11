@@ -1004,7 +1004,7 @@
         .thankyou-card p {
             color: var(--text-muted);
             font-size: 1.15rem;
-            line-6: 1.6;
+            line-height: 1.6;
             margin-bottom: 25px;
         }
 
@@ -1012,15 +1012,13 @@
            9. استايلات تأثيرات حركة التمرير الفاخرة (Scroll Reveal Animations)
            ========================================================================== */
         .reveal-fade, .reveal-left, .reveal-right, .reveal-zoom {
-            /* تعديل: إيقاف تأثيرات الاختفاء والحركة عند السكرول لتظهر العناصر مباشرة بشكل طبيعي */
-            opacity: 1 !important;
-            transform: none !important;
-            transition: none !important;
+            opacity: 0;
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
         }
-        .reveal-fade { transform: none; }
-        .reveal-left { transform: none; }
-        .reveal-right { transform: none; }
-        .reveal-zoom { transform: none; }
+        .reveal-fade { transform: translateY(40px); }
+        .reveal-left { transform: translateX(-50px); }
+        .reveal-right { transform: translateX(50px); }
+        .reveal-zoom { transform: scale(0.9); }
 
         .reveal-visible {
             opacity: 1 !important;
@@ -1412,7 +1410,7 @@
                     
                     animatePrice(basicPrice, basicPrice.getAttribute('data-monthly'), ' ج.م/ شهري');
                     animatePrice(premiumPrice, premiumPrice.getAttribute('data-monthly'), ' ج.م/ شهري');
-                    animatePrice(ultimatePrice, ultimatePrice.getAttribute('data-monthly'), ' ج.م/ شهري');
+                    animatePrice(ultimatePrice, ultimatePrice.getAttribute('data-monthly'), ' ج.m/ شهري');
                 }
             });
         }
