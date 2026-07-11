@@ -21,8 +21,8 @@
            1. استدعاء الخط وتطبيقه بالكامل والتهيئة (Fonts & Universal Colors)
            ========================================================================== */
         @font-face {
-            font-family: 'MilanDisplay';
-            src: url('Milan Display Black Swashes.otf') format('opentype');
+            font-family: 'SpeedV2';
+            src: url('Speed V2-Condensed.ttf') format('truetype');
             font-weight: normal;
             font-style: normal;
         }
@@ -45,7 +45,7 @@
             box-sizing: border-box;
             scroll-behavior: smooth;
             /* تطبيق الفونت على كل الكلمات في الموقع */
-            font-family: 'MilanDisplay', 'Segoe UI', Tahoma, sans-serif;
+            font-family: 'SpeedV2', 'Segoe UI', Tahoma, sans-serif;
         }
 
         body {
@@ -467,155 +467,6 @@
         }
 
         /* ==========================================================================
-           5.ب قسم معرض الأعمال الفاخر (Portfolio Section)
-           ========================================================================== */
-        .portfolio-section {
-            padding: 100px 0;
-            position: relative;
-        }
-
-        .portfolio-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 30px;
-            margin-top: 50px;
-        }
-
-        .portfolio-item {
-            background: var(--bg-card);
-            border: 1px solid rgba(0, 85, 255, 0.1);
-            border-radius: 24px;
-            overflow: hidden;
-            position: relative;
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            transition: var(--transition-smooth);
-        }
-
-        .portfolio-item:hover {
-            transform: translateY(-8px);
-            border-color: var(--primary-blue);
-            box-shadow: 0 20px 40px rgba(0, 85, 255, 0.2);
-        }
-
-        .portfolio-img {
-            width: 100%;
-            height: 220px;
-            background: linear-gradient(135deg, rgba(0,85,255,0.1), rgba(255,255,255,0.05));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--text-muted);
-            font-size: 3rem;
-            position: relative;
-        }
-
-        /* يمكنك استبدال الأيقونة بـ تاق img حقيقي لاحقاً */
-        .portfolio-img i {
-            transition: var(--transition-smooth);
-        }
-
-        .portfolio-item:hover .portfolio-img i {
-            transform: scale(1.2);
-            color: var(--pure-white);
-            filter: drop-shadow(0 0 15px var(--primary-blue));
-        }
-
-        .portfolio-info {
-            padding: 25px;
-        }
-
-        .portfolio-info span {
-            font-size: 0.85rem;
-            color: var(--primary-blue);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-weight: bold;
-        }
-
-        .portfolio-info h3 {
-            font-size: 1.4rem;
-            color: var(--pure-white);
-            margin: 10px 0;
-        }
-
-        .portfolio-info p {
-            color: var(--text-muted);
-            font-size: 0.95rem;
-            line-height: 1.6;
-        }
-
-        /* ==========================================================================
-           5.ج قسم آراء العملاء (Testimonials Section)
-           ========================================================================== */
-        .testimonials-section {
-            padding: 100px 0;
-        }
-
-        .testimonials-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-        }
-
-        .testimonial-card {
-            background: rgba(10, 34, 64, 0.3);
-            border: 1px solid rgba(0, 85, 255, 0.08);
-            padding: 40px 30px;
-            border-radius: 24px;
-            position: relative;
-            transition: var(--transition-smooth);
-        }
-
-        .testimonial-card:hover {
-            border-color: rgba(0, 85, 255, 0.3);
-            background: var(--bg-card);
-        }
-
-        .testimonial-card .quote-icon {
-            position: absolute;
-            top: 20px;
-            left: 30px;
-            font-size: 2rem;
-            color: rgba(0, 85, 255, 0.2);
-        }
-
-        .testimonial-card p {
-            color: var(--text-light);
-            font-style: italic;
-            line-height: 1.8;
-            margin-bottom: 25px;
-        }
-
-        .client-info {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .client-avatar {
-            width: 50px;
-            height: 50px;
-            background: var(--primary-blue);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--pure-white);
-            font-weight: bold;
-        }
-
-        .client-details h4 {
-            color: var(--pure-white);
-            font-size: 1.1rem;
-        }
-
-        .client-details span {
-            color: var(--text-muted);
-            font-size: 0.85rem;
-        }
-
-        /* ==========================================================================
            6. صندوق التواصل (Contact Box & Cyberpunk Form Setup)
            ========================================================================== */
         .contact-section {
@@ -839,7 +690,6 @@
                 <ul>
                     <li><a href="#home" class="nav-link active">الرئيسية</a></li>
                     <li><a href="#services" class="nav-link">خدماتنا</a></li>
-                    <li><a href="#portfolio" class="nav-link">أعمالنا</a></li>
                     <li><a href="#contact" class="nav-link">تواصل معنا</a></li>
                 </ul>
             </nav>
@@ -888,74 +738,6 @@
                     <div class="icon-box"><i class="fa-solid fa-bullhorn"></i></div>
                     <h3>إدارة صفحات السوشيال ميديا</h3>
                     <p>كتابة المحتوى، جدولة المنشورات, التفاعل مع الجمهور، وبناء خطة تسويقية تضمن لك الانتشار والنمو.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="portfolio" class="portfolio-section">
-        <div class="container">
-            <div class="section-title">
-                <h2>معرض أعمالنا</h2>
-                <p>شاهد عينات من المشاريع الهندسية والإبداعية التي نفخر بها</p>
-            </div>
-            <div class="portfolio-grid">
-                <div class="portfolio-item">
-                    <div class="portfolio-img"><i class="fa-solid fa-laptop-code"></i></div>
-                    <div class="portfolio-info">
-                        <span>تطوير ويب</span>
-                        <h3>متجر إلكتروني متكامل</h3>
-                        <p>تطوير متجر إلكتروني حديث بـ واجهة مستخدم سلسة مخصصة لرفع المبيعات.</p>
-                    </div>
-                </div>
-                <div class="portfolio-item">
-                    <div class="portfolio-img"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
-                    <div class="portfolio-info">
-                        <span>تصميم إبداعي</span>
-                        <h3>تصاميم صور مصغرة YouTube</h3>
-                        <p>تصميم حزمة حصرية من الـ Thumbnails الإحترافية حققت أعلى معدلات نقر (CTR).</p>
-                    </div>
-                </div>
-                <div class="portfolio-item">
-                    <div class="portfolio-img"><i class="fa-solid fa-bullhorn"></i></div>
-                    <div class="portfolio-info">
-                        <span>سوشيال ميديا</span>
-                        <h3>حملة إطلاق هوية تجارية</h3>
-                        <p>بناء وإدارة خطة نشر كاملة ساهمت في نمو المتابعين بنسبة تفوق الـ 40%.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="testimonials" class="testimonials-section">
-        <div class="container">
-            <div class="section-title">
-                <h2>ماذا يقول شركاء النجاح؟</h2>
-                <p>آراء حقيقية من عملائنا الذين وثقوا بخدماتنا الرقمية</p>
-            </div>
-            <div class="testimonials-grid">
-                <div class="testimonial-card">
-                    <i class="fa-solid fa-quote-left quote-icon"></i>
-                    <p>« دقة مذهلة في تسليم الكود البرمجي وسرعة فائقة في التنفيذ والتعديل، أنصح بالتعامل مع GridHub بشدة. »</p>
-                    <div class="client-info">
-                        <div class="client-avatar">م</div>
-                        <div class="client-details">
-                            <h4>محمد عبد الله</h4>
-                            <span>صاحب شركة برمجيات</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="testimonial-card">
-                    <i class="fa-solid fa-quote-left quote-icon"></i>
-                    <p>« التصاميم الخاصة بالقناة غيرت من شكل المحتوى تماماً وزادت المشاهدات، إبداع لا متناهي. »</p>
-                    <div class="client-info">
-                        <div class="client-avatar">أ</div>
-                        <div class="client-details">
-                            <h4>أحمد خالد</h4>
-                            <span>صانع محتوى يوتيوب</span>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
