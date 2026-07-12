@@ -1011,6 +1011,39 @@
         }
 
         /* ==========================================================================
+           8.5 إضافات مخصصة لواجهة الحساب الفاخرة المحدثة (Auth Tabs UI)
+           ========================================================================== */
+        .auth-tabs {
+            display: flex;
+            border-bottom: 2px solid rgba(255,255,255,0.05);
+            margin-bottom: 25px;
+            gap: 15px;
+        }
+        .auth-tab {
+            flex: 1;
+            padding: 12px;
+            color: var(--text-muted);
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            border-bottom: 2px solid transparent;
+            margin-bottom: -2px;
+        }
+        .auth-tab.active {
+            color: var(--pure-white);
+            border-color: var(--primary-blue);
+            text-shadow: 0 0 10px rgba(0, 85, 255, 0.5);
+        }
+        .auth-panel {
+            display: none;
+            text-align: right;
+        }
+        .auth-panel.active {
+            display: block;
+        }
+
+        /* ==========================================================================
            9. استايلات تأثيرات حركة التمرير الفاخرة (Scroll Reveal Animations)
            ========================================================================== */
         .reveal-fade, .reveal-left, .reveal-right, .reveal-zoom {
@@ -1068,12 +1101,40 @@
 
     <div class="auth-modal" id="authModal">
         <div class="auth-card">
-            <h3 style="color:white; margin-bottom: 20px;">تسجيل الدخول / إنشاء حساب</h3>
+            <div class="auth-tabs">
+                <div class="auth-tab active" onclick="switchAuthTab('login')">تسجيل الدخول</div>
+                <div class="auth-tab" onclick="switchAuthTab('register')">إنشاء حساب</div>
+            </div>
             
-            <input type="email" id="loginEmail" placeholder="البريد الإلكتروني" class="cyber-input" style="margin-bottom:15px">
-            <input type="password" id="loginPass" placeholder="كلمة المرور" class="cyber-input" style="margin-bottom:20px">
-            <button class="btn btn-primary" style="width:100%" onclick="handleLogin()">دخول / إنشاء حساب بالبريد</button>
-            <button class="btn" style="width:100%; margin-top:10px; background:rgba(255,255,255,0.1)" onclick="document.getElementById('authModal').classList.remove('show')">إغلاق</button>
+            <div class="auth-panel active" id="loginPanel">
+                <div class="form-group" style="margin-bottom:15px">
+                    <label>البريد الإلكتروني</label>
+                    <input type="email" id="loginEmail" placeholder="name@example.com" class="cyber-input">
+                </div>
+                <div class="form-group" style="margin-bottom:20px">
+                    <label>كلمة المرور</label>
+                    <input type="password" id="loginPass" placeholder="أدخل كلمة المرور" class="cyber-input">
+                </div>
+                <button class="btn btn-primary" style="width:100%" onclick="handleLoginOnly()">تسجيل الدخول</button>
+            </div>
+
+            <div class="auth-panel" id="registerPanel">
+                <div class="form-group" style="margin-bottom:15px">
+                    <label>البريد الإلكتروني</label>
+                    <input type="email" id="regEmail" placeholder="name@example.com" class="cyber-input">
+                </div>
+                <div class="form-group" style="margin-bottom:15px">
+                    <label>كلمة المرور</label>
+                    <input type="password" id="regPass" placeholder="أنشئ كلمة مرور قوية" class="cyber-input">
+                </div>
+                <div class="form-group" style="margin-bottom:20px">
+                    <label>تأكيد كلمة المرور</label>
+                    <input type="password" id="regPassConfirm" placeholder="أعد كتابة كلمة المرور" class="cyber-input">
+                </div>
+                <button class="btn btn-primary" style="width:100%" onclick="handleRegisterOnly()">إنشاء حساب جديد</button>
+            </div>
+
+            <button class="btn" style="width:100%; margin-top:15px; background:rgba(255,255,255,0.05); color:var(--text-muted);" onclick="document.getElementById('authModal').classList.remove('show')">إغلاق النافذة</button>
         </div>
     </div>
 
@@ -1273,16 +1334,61 @@
             }
         }
 
-        // تسجيل الدخول بالبريد
-        async function handleLogin() {
+        // دالة التبديل التفاعلي بين واجهات تسجيل الدخول والإنشاء
+        function switchAuthTab(type) {
+            const tabs = document.querySelectorAll('.auth-tab');
+            const panels = document.querySelectorAll('.auth-panel');
+            
+            tabs.forEach(tab => tab.classList.remove('active'));
+            panels.forEach(panel => panel.classList.remove('active'));
+            
+            if (type === 'login') {
+                tabs[0].classList.add('active');
+                document.getElementById('loginPanel').classList.add('active');
+            } else {
+                tabs[1].classList.add('active');
+                document.getElementById('registerPanel').classList.add('active');
+            }
+        }
+
+        // دالة تسجيل الدخول المستقلة والحقيقية بالكامل
+        async function handleLoginOnly() {
             const email = document.getElementById('loginEmail').value;
             const password = document.getElementById('loginPass').value;
+            
+            if (!email || !password) { alert("برجاء ملء كافة الحقول المطلوبة."); return; }
+            
+            const { data, error } = await _supabase.auth.signInWithPassword({ email, password });
+            if (error) {
+                alert("خطأ في تسجيل الدخول: " + error.message);
+            } else {
+                alert("تم تسجيل الدخول بنجاح! أهلاً بك مجدداً.");
+                document.getElementById('authModal').classList.remove('show');
+            }
+        }
+
+        // دالة إنشاء حساب جديد مستقلة وحقيقية تماماً
+        async function handleRegisterOnly() {
+            const email = document.getElementById('regEmail').value;
+            const password = document.getElementById('regPass').value;
+            const passwordConfirm = document.getElementById('regPassConfirm').value;
+            
+            if (!email || !password || !passwordConfirm) { alert("برجاء ملء جميع الحقول."); return; }
+            if (password !== passwordConfirm) { alert("خطأ: كلمات المرور غير متطابقة."); return; }
+            
             const { data, error } = await _supabase.auth.signUp({ email, password });
             if (error) {
-                const { data, error: signInError } = await _supabase.auth.signInWithPassword({ email, password });
-                if (signInError) alert("خطأ: " + signInError.message);
-                else { alert("تم تسجيل الدخول بنجاح!"); document.getElementById('authModal').classList.remove('show'); }
-            } else { alert("تم إنشاء حسابك بنجاح!"); document.getElementById('authModal').classList.remove('show'); }
+                alert("خطأ في إنشاء الحساب: " + error.message);
+            } else {
+                alert("تم إنشاء حسابك بنجاح! يرجى التحقق من بريدك الإلكتروني إذا تطلب الأمر تأكيد التفعيل.");
+                document.getElementById('authModal').classList.remove('show');
+            }
+        }
+
+        // الدالة الأصلية المطلوبة والمحافظ عليها لربط زر الدخول في الهيدر بالـ Modal
+        async function handleLogin() {
+            // حافظنا على استدعاء الدالة بنفس الإسم تجنباً لأي مشاكل ربط، وهي الآن توجه لفتح المودال بالوضع الافتراضي الترحيبي للزائر
+            document.getElementById('authModal').classList.add('show');
         }
 
         document.getElementById('loginTrigger').addEventListener('click', (e) => { e.preventDefault(); document.getElementById('authModal').classList.add('show'); });
