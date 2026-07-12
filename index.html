@@ -330,7 +330,7 @@
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
             padding: 10px 0;
             display: none;
-            z-index: 10000;
+            z-index: 10005;
             animation: fadeInError 0.3s ease forwards;
         }
         .profile-dropdown.show {
@@ -1064,6 +1064,19 @@
                 align-items: center;
                 gap: 25px;
             }
+            /* جعل المنيو المنسدل يظهر بشكل صحيح ومنع التداخل على الهواتف */
+            .user-profile-menu {
+                width: 100%;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+            .profile-dropdown {
+                position: static;
+                width: 90%;
+                margin-top: 10px;
+                box-shadow: none;
+            }
             .hero-text h1 { font-size: 2.3rem; }
             .contact-box h2 { font-size: 2.1rem; }
             .grid-box { grid-template-columns: repeat(2, 130px); gap: 15px; }
@@ -1595,7 +1608,7 @@
             const { data: { user } } = await _supabase.auth.getUser();
             if (user && user.email) {
                 const { error } = await _supabase.auth.resetPasswordForEmail(user.email, {
-                    redirectTo: 'https://gridhub1.github.io/-/',
+                    redirectTo: window.location.href,
                 });
                 if (error) {
                     document.getElementById('resetErrorMsg').style.display = 'inline-flex';
@@ -1835,7 +1848,7 @@
                 thankYouModal.classList.add('show');
                 cyberForm.reset();
             });
-            closeModalBtn.addEventListener('click', function() { thankYouModal.classList.remove('show'); window.location.href = "https://gridhub1.github.io/-/"; });
+            closeModalBtn.addEventListener('click', function() { thankyouModal.classList.remove('show'); window.location.href = "https://gridhub1.github.io/-/"; });
         }
 
         const pricingCheckbox = document.getElementById('pricing-checkbox');
