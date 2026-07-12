@@ -29,6 +29,14 @@
             font-style: normal;
         }
 
+        /* استدعاء الخط الجديد المضاف */
+        @font-face {
+            font-family: 'LiftaSwash';
+            src: url('Liftaswashv3-Regular.otf') format('opentype');
+            font-weight: normal;
+            font-style: normal;
+        }
+
         :root {
             /* لوحة ألوان نقية تعتمد كلياً على تدرجات الأزرق الرقمي والأبيض فقط */
             --bg-dark: #020813;
@@ -55,8 +63,19 @@
             padding: 0;
             box-sizing: border-box;
             scroll-behavior: smooth;
-            /* تطبيق الفونت على كل الكلمات في الموقع */
+            /* تطبيق خط Speed V2 كخط افتراضي للموقع بالكامل */
             font-family: 'SpeedV2', 'Segoe UI', Tahoma, sans-serif;
+        }
+
+        /* كلاس مخصص لتطبيق خط Lifta v3 على الكلمات الانجليزية واليوزرنيم ورسالة الشكر */
+        .en-text, 
+        #navUsername, 
+        #dropdownUsername, 
+        #regUsername, 
+        #settingsUsernameInput,
+        .thankyou-card,
+        .thankyou-card * {
+            font-family: 'LiftaSwash', 'Segoe UI', Tahoma, sans-serif !important;
         }
 
         body {
@@ -236,10 +255,6 @@
             height: 52px;
             filter: drop-shadow(0 0 10px rgba(0, 85, 255, 0.5));
             transition: var(--transition-smooth);
-        }
-
-        .logo:hover img {
-            transform: rotate(6deg) scale(1.08);
         }
 
         .logo span {
@@ -1363,10 +1378,10 @@
         <div class="loader-content">
             <div class="logo-animation">
                 <span class="bracket">&lt;</span>
-                <span class="text">GridHub</span>
+                <span class="text en-text">GridHub</span>
                 <span class="bracket">/&gt;</span>
             </div>
-            <div class="loader-counter" id="loadCounter">0</div>
+            <div class="loader-counter en-text" id="loadCounter">0</div>
             <div class="load-bar">
                 <div class="progress" id="progressBar"></div>
             </div>
@@ -1378,7 +1393,7 @@
         <div class="container header-container">
             <div class="logo">
                 <img src="https://i.ibb.co/MyhstGh0/Picsart-26-07-10-23-47-06-393.png" alt="GridHub Logo">
-                <span>GridHub</span>
+                <span class="en-text">GridHub</span>
             </div>
             <div class="menu-toggle" id="menuBtn">
                 <i class="fa-solid fa-bars"></i>
@@ -1426,12 +1441,12 @@
             <div class="auth-panel active" id="loginPanel">
                 <div class="form-group" style="margin-bottom:15px">
                     <label>البريد الإلكتروني</label>
-                    <input type="email" id="loginEmail" placeholder="name@example.com" class="cyber-input">
+                    <input type="email" id="loginEmail" placeholder="name@example.com" class="cyber-input en-text" required>
                     <div class="cyber-error-msg" id="loginEmailError"><i class="fa-solid fa-circle-exclamation"></i> البريد الإلكتروني غير مسجل أو غير صحيح.</div>
                 </div>
                 <div class="form-group" style="margin-bottom:20px">
                     <label>كلمة المرور</label>
-                    <input type="password" id="loginPass" placeholder="أدخل كلمة المرور" class="cyber-input">
+                    <input type="password" id="loginPass" placeholder="أدخل كلمة المرور" class="cyber-input" required>
                     <div class="cyber-error-msg" id="loginPassError"><i class="fa-solid fa-key"></i> خطأ في كلمة المرور، يرجى إعادة التحقق منها.</div>
                     <div class="cyber-success-msg" id="loginSuccess"><i class="fa-solid fa-circle-check"></i> أهلاً بك مجدداً! تم تسجيل الدخول...</div>
                 </div>
@@ -1441,23 +1456,27 @@
             <div class="auth-panel" id="registerPanel">
                 <div class="form-group" style="margin-bottom:15px">
                     <label>اسم المستخدم (اليوزر نيم)</label>
-                    <input type="text" id="regUsername" placeholder="مثال: ahmed_grid" class="cyber-input">
+                    <input type="text" id="regUsername" placeholder="مثال: ahmed_grid" class="cyber-input en-text" required>
                 </div>
                 <div class="form-group" style="margin-bottom:15px">
                     <label>البريد الإلكتروني</label>
-                    <input type="email" id="regEmail" placeholder="name@example.com" class="cyber-input">
+                    <input type="email" id="regEmail" placeholder="name@example.com" class="cyber-input en-text" required>
                     <div class="cyber-error-msg" id="regEmailError"><i class="fa-solid fa-circle-exclamation"></i> البريد مسجل بالفعل أو صيغته غير صحيحة.</div>
                 </div>
-                
+                <div class="form-group" style="margin-bottom:15px">
+                    <label>رقم الهاتف</label>
+                    <input type="tel" id="regPhone" placeholder="أدخل رقم هاتفك للتواصل" class="cyber-input en-text" required>
+                    <div class="cyber-error-msg" id="regPhoneError"><i class="fa-solid fa-circle-exclamation"></i> برجاء إدخال رقم الهاتف.</div>
+                </div>
                 <div class="form-group" style="margin-bottom:15px">
                     <label><i class="fa-solid fa-image"></i> اختر صورة البروفايل وعدل مقاساتها</label>
-                    <input type="file" id="regAvatarInput" accept="image/*" class="cyber-input" style="padding: 10px;">
+                    <input type="file" id="regAvatarInput" accept="image/*" class="cyber-input" style="padding: 10px;" required>
                     <div class="avatar-crop-container" id="regAvatarCropBox" style="display:none;">
                         <div class="avatar-preview-box" id="regAvatarPrevBox">
                             <img src="" id="regAvatarPreviewImg" alt="Preview">
                         </div>
                         <div class="crop-controls">
-                            <label>تحكم في المقاس (Zoom)</label>
+                            <label>تحكم في المقاس (<span class="en-text">Zoom</span>)</label>
                             <input type="range" id="regAvatarZoom" min="100" max="300" value="100" class="crop-slider">
                         </div>
                     </div>
@@ -1465,12 +1484,12 @@
 
                 <div class="form-group" style="margin-bottom:15px">
                     <label>كلمة المرور</label>
-                    <input type="password" id="regPass" placeholder="أنشئ كلمة مرور قوية" class="cyber-input">
-                    <div class="cyber-error-msg" id="regPassError" style="line-height: 1.4; text-align: justify;"><i class="fa-solid fa-triangle-exclamation"></i> يجب أن تحتوي كلمة المرور على: حروف كبيرة (A-Z)، صغيرة (a-z)، أرقام (0-9)، ورموز خاصة مثل (!@#$).</div>
+                    <input type="password" id="regPass" placeholder="أنشئ كلمة مرور قوية" class="cyber-input" required>
+                    <div class="cyber-error-msg" id="regPassError" style="line-height: 1.4; text-align: justify;"><i class="fa-solid fa-triangle-exclamation"></i> يجب أن تحتوي كلمة المرور على: حروف كبيرة (<span class="en-text">A-Z</span>)، صغيرة (<span class="en-text">a-z</span>)، أرقام (<span class="en-text">0-9</span>)، ورموز خاصة مثل (!@#$).</div>
                 </div>
                 <div class="form-group" style="margin-bottom:20px">
                     <label>تأكيد كلمة المرور</label>
-                    <input type="password" id="regPassConfirm" placeholder="أعد كتابة كلمة المرور" class="cyber-input">
+                    <input type="password" id="regPassConfirm" placeholder="أعد كتابة كلمة المرور" class="cyber-input" required>
                     <div class="cyber-error-msg" id="regPassConfirmError"><i class="fa-solid fa-circle-xmark"></i> كلمات المرور غير متطابقة إطلاقاً.</div>
                     <div class="cyber-success-msg" id="regSuccess"><i class="fa-solid fa-envelope-circle-check"></i> تم إنشاء الحساب! يرجى مراجعة بريدك الإلكتروني للتفعيل.</div>
                 </div>
@@ -1493,7 +1512,7 @@
 
             <div class="form-group" style="margin-bottom:20px; text-align:right;">
                 <label>تعديل اسم المستخدم (اليوزر نيم)</label>
-                <input type="text" id="settingsUsernameInput" class="cyber-input" placeholder="اكتب اسم المستخدم الجديد">
+                <input type="text" id="settingsUsernameInput" class="cyber-input en-text" placeholder="اكتب اسم المستخدم الجديد">
                 <div class="cyber-success-msg" id="settingsSuccessMsg"><i class="fa-solid fa-circle-check"></i> تم تحديث الاسم بنجاح!</div>
             </div>
             
@@ -1501,7 +1520,7 @@
                 <label><i class="fa-solid fa-shield-halved"></i> الأمان وكلمة المرور</label>
                 <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:10px;">اضغط على الزر لإرسال رمز تحقق ورابط تغيير كلمة المرور مباشرة إلى بريدك الإلكتروني المسجل.</p>
                 <button class="btn btn-secondary" style="width:100%; padding:10px; font-size:1rem;" onclick="sendPasswordResetEmail()">إرسال رمز إعادة تعيين كلمة السر</button>
-                <div class="cyber-success-msg" id="resetSuccessMsg"><i class="fa-solid fa-paper-plane"></i> تم إرسال الرسالة! يرجى مراجعة صندوق الوارد والـ Spam.</div>
+                <div class="cyber-success-msg" id="resetSuccessMsg"><i class="fa-solid fa-paper-plane"></i> تم إرسال الرسالة! يرجى مراجعة صندوق الوارد والـ <span class="en-text">Spam</span>.</div>
                 <div class="cyber-error-msg" id="resetErrorMsg"><i class="fa-solid fa-circle-exclamation"></i> عذراً، فشل إرسال البريد. حاول مجدداً.</div>
             </div>
 
@@ -1534,7 +1553,7 @@
     <section id="why-us" class="why-us-section">
         <div class="container">
             <div class="section-title reveal-fade">
-                <h2>لماذا تختار <span class="highlight">GridHub؟</span></h2>
+                <h2>لماذا تختار <span class="highlight en-text">GridHub</span>؟</h2>
                 <p>نحن لا نقدم مجرد خدمات، بل نصنع لك شراكة استراتيجية تضمن تفوقك المستمر</p>
             </div>
             <div class="why-grid">
@@ -1587,19 +1606,19 @@
     <section id="services" class="services-section">
         <div class="container">
             <div class="section-title reveal-fade">
-                <h2>ماذا نقدم في GridHub?</h2>
+                <h2>ماذا نقدم في <span class="en-text">GridHub</span>؟</h2>
                 <p>كل ما يحتاجه بيزنسك أو قناتك للنمو في مكان واحد</p>
             </div>
             <div class="services-grid">
                 <div class="service-card reveal-fade" style="transition-delay: 0.1s;">
                     <div class="icon-box"><i class="fa-solid fa-laptop-code"></i></div>
                     <h3>برمجة وتطوير الويب</h3>
-                    <p>تصميم وبرمجة مواقع ومتاجر إلكترونية سريعة، مودرن، ومتوافقة مع جميع الشاشات بأحدث التقنيات. نهتم بتجربة المستخدم (UX/UI) لبناء منصات تضمن بقاء الزائر وتحويله لعميل فعلي.</p>
+                    <p>تصميم وبرمجة مواقع ومتاجر إلكترونية سريعة، مودرن، ومتوافقة مع جميع الشاشات بأحدث التقنيات. نهتم بتجربة المستخدم (<span class="en-text">UX/UI</span>) لبناء منصات تضمن بقاء الزائر وتحويله لعميل فعلي، بالإضافة إلى نظام إشعارات متكامل وخدمات كتير تاني.</p>
                 </div>
                 <div class="service-card reveal-fade" style="transition-delay: 0.2s;">
                     <div class="icon-box"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
-                    <h3>التصميم والـ Thumbnails</h3>
-                    <p>صناعة صور مصغرة (Thumbnails) جاذبة لليوتيوب، بوسترات إعلانية، وهوية بصرية كاملة لشركتك. نعتمد على دراسة سيكولوجية الألوان لرفع نسبة النقر للظهور (CTR) بشكل مضاعف.</p>
+                    <h3>التصميم والـ <span class="en-text">Thumbnails</span></h3>
+                    <p>صناعة صور مصغرة (<span class="en-text">Thumbnails</span>) جاذبة لليوتيوب، بوسترات إعلانية، وهوية بصرية كاملة لشركتك. نعتمد على دراسة سيكولوجية الألوان لرفع نسبة النقر للظهور (<span class="en-text">CTR</span>) بشكل مضاعف.</p>
                 </div>
                 <div class="service-card reveal-fade" style="transition-delay: 0.3s;">
                     <div class="icon-box"><i class="fa-solid fa-bullhorn"></i></div>
@@ -1638,21 +1657,21 @@
                         <label for="chk-programming">حدد هذه الخدمة</label>
                     </div>
                     <ul class="pricing-features">
-                        <li><i class="fa-solid fa-circle-check"></i> برمجة موقع ويب Landing Page أو تعريفي</li>
+                        <li><i class="fa-solid fa-circle-check"></i> برمجة موقع ويب <span class="en-text">Landing Page</span> أو تعريفي</li>
                         <li><i class="fa-solid fa-circle-check"></i> متوافق مع كافة الهواتف والشاشات</li>
                         <li><i class="fa-solid fa-circle-check"></i> كود نظيف وسرعة تصفح فائقة</li>
                         <li><i class="fa-solid fa-circle-check"></i> لوحة تحكم سهلة لإدارة المحتوى</li>
                         <li><i class="fa-solid fa-circle-check"></i> ربط الدومين والاستضافة باحترافية</li>
-                        <li><i class="fa-solid fa-circle-check"></i> دعم فني متميز ومتابعة دورية مجانية</li>
+                        <li><i class="fa-solid fa-circle-check"></i> نظام إشعارات متكامل وخدمات كتير تاني</li>
                     </ul>
                     <button class="btn btn-primary btn-pricing" onclick="checkAuthAndProceed()">اطلب الخدمات المحددة الآن</button>
                 </div>
 
                 <div class="pricing-card popular reveal-fade" style="transition-delay: 0.2s;">
                     <div class="pricing-header">
-                        <h3>الصور المصغرة والـ Thumbnails</h3>
+                        <h3>الصور المصغرة والـ <span class="en-text">Thumbnails</span></h3>
                         <div class="pricing-price" id="price-premium" data-monthly="1200" data-yearly="960">1200 ج.م<span>/ شهري</span></div>
-                        <p class="pricing-desc">تصاميم إبداعية كليك بيت (Clickbait) ذكية تضمن رفع نسبة النقر إلى الظهور (CTR) لقناتك.</p>
+                        <p class="pricing-desc">تصاميم إبداعية كليك بيت (<span class="en-text">Clickbait</span>) ذكية تضمن رفع نسبة النقر إلى الظهور (<span class="en-text">CTR</span>) لقناتك.</p>
                     </div>
                     <div class="select-service-wrapper">
                         <input type="checkbox" id="chk-thumbnails" class="service-select-chk" value="الصور المصغرة والـ Thumbnails">
@@ -1713,7 +1732,7 @@
 
                     <div class="form-group">
                         <label for="email">البريد الإلكتروني</label>
-                        <input type="email" id="email" name="البريد الإلكتروني" class="cyber-input" placeholder="name@example.com" required>
+                        <input type="email" id="email" name="البريد الإلكتروني" class="cyber-input en-text" placeholder="name@example.com" required>
                     </div>
 
                     <div class="form-group">
@@ -1733,7 +1752,7 @@
         <div class="thankyou-card">
             <img src="https://i.ibb.co/MyhstGh0/Picsart-26-07-10-23-47-06-393.png" alt="GridHub Logo">
             <h3>أهلاً بك في عالم الفخامة الرقمية!</h3>
-            <p>لقد استلمنا تفاصيل طلبك بكل سرور. في GridHub نحن نقدر وقتك الثمين، ولذلك نؤكد لك أننا نقوم بمراجعة مشروعك حالياً، وسنرد عليك في <strong>أسرع وقت ممكن</strong> لنبدأ سوياً في تحويل أفكارك إلى واقع يبهر الجميع.</p>
+            <p>لقد استلمنا تفاصيل طلبك بكل سرور. في <span class="en-text">GridHub</span> نحن نقدر وقتك الثمين، ولذلك نؤكد لك أننا نقوم بمراجعة مشروعك حالياً، وسنرد عليك في <strong>أسرع وقت ممكن</strong> لنبدأ سوياً في تحويل أفكارك إلى واقع يبهر الجميع.</p>
             <button class="btn btn-primary" id="closeModalBtn">استمرار التصفح بكل سرور</button>
         </div>
     </div>
@@ -1744,7 +1763,7 @@
             <a href="https://www.facebook.com/share/195ZucLcU5/" target="_blank" class="social-icon"><i class="fa-brands fa-facebook-f"></i></a>
             <a href="https://vt.tiktok.com/ZSX8FeW2e/" target="_blank" class="social-icon"><i class="fa-brands fa-tiktok"></i></a>
         </div>
-        <p>&copy; 2026 GridHub. جميع الحقوق محفوظة.</p>
+        <p>&copy; 2026 <span class="en-text">GridHub</span>. جميع الحقوق محفوظة.</p>
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -1945,6 +1964,8 @@
             document.getElementById('regPass').value = '';
             document.getElementById('regPassConfirm').value = '';
             document.getElementById('regUsername').value = '';
+            const phoneInput = document.getElementById('regPhone');
+            if(phoneInput) phoneInput.value = '';
             if(document.getElementById('regAvatarInput')) document.getElementById('regAvatarInput').value = '';
             if(regAvatarCropBox) regAvatarCropBox.style.display = 'none';
             finalAvatarBase64 = "";
@@ -2044,12 +2065,18 @@
             const password = document.getElementById('regPass').value;
             const passwordConfirm = document.getElementById('regPassConfirm').value;
             const username = document.getElementById('regUsername').value.trim();
+            const phoneInput = document.getElementById('regPhone');
+            const phone = phoneInput ? phoneInput.value.trim() : "";
             
             document.querySelectorAll('.cyber-error-msg, .cyber-success-msg').forEach(el => el.style.display = 'none');
             
             if (!email) {
                 document.getElementById('regEmailError').innerText = "برجاء كتابة بريد إلكتروني صالح.";
                 document.getElementById('regEmailError').style.display = 'inline-flex';
+                return;
+            }
+            if (phoneInput && !phone) {
+                document.getElementById('regPhoneError').style.display = 'inline-flex';
                 return;
             }
             if (!password) {
@@ -2067,6 +2094,7 @@
                 options: {
                     data: { 
                         username: username || email.split('@')[0],
+                        phone: phone, // إضافة رقم الهاتف إلى الـ Metadata
                         avatar_url: finalAvatarBase64 || "https://i.ibb.co/MyhstGh0/Picsart-26-07-10-23-47-06-393.png"
                     }
                 }
