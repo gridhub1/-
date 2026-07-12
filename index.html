@@ -724,22 +724,9 @@
             margin-bottom: 15px;
         }
 
+        /* إخفاء الأسعار بناءً على رغبتك */
         .pricing-price {
-            font-size: 2.5rem;
-            font-weight: bold;
-            color: var(--pure-white);
-            margin-bottom: 10px;
-            display: flex;
-            justify-content: center;
-            align-items: baseline;
-            gap: 5px;
-            transition: var(--transition-smooth);
-        }
-
-        .pricing-price span {
-            font-size: 1.1rem;
-            color: var(--text-muted);
-            font-weight: normal;
+            display: none !important;
         }
 
         .pricing-desc {
@@ -835,6 +822,55 @@
         .pricing-card .btn-pricing-secondary:hover {
             background: var(--primary-blue);
             box-shadow: 0 5px 20px rgba(0, 85, 255, 0.4);
+        }
+
+        /* ستايل أداة قص البروفايل التفاعلية داخل الـ Modal */
+        .avatar-crop-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: rgba(2, 8, 19, 0.6);
+            border: 1px dashed rgba(0, 85, 255, 0.3);
+            border-radius: 14px;
+            padding: 15px;
+            margin-top: 10px;
+        }
+        .avatar-preview-box {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 2px solid var(--primary-blue);
+            position: relative;
+            background: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .avatar-preview-box img {
+            position: absolute;
+            transform-origin: center center;
+            max-width: none;
+            cursor: move;
+        }
+        .crop-controls {
+            width: 100%;
+            margin-top: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        .crop-controls label {
+            font-size: 0.85rem !important;
+            color: var(--text-muted) !important;
+        }
+        .crop-slider {
+            width: 100%;
+            accent-color: var(--primary-blue);
+            background: rgba(255,255,255,0.1);
+            border-radius: 5px;
+            height: 6px;
+            outline: none;
         }
 
         /* ==========================================================================
@@ -1118,6 +1154,8 @@
             width: 90%;
             transform: scale(0.7);
             transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            overflow-y: auto;
+            max-height: 90vh;
         }
         .thankyou-modal.show .thankyou-card, .auth-modal.show .auth-card, .settings-modal.show .settings-card {
             transform: scale(1);
@@ -1280,6 +1318,21 @@
                     <input type="email" id="regEmail" placeholder="name@example.com" class="cyber-input">
                     <div class="cyber-error-msg" id="regEmailError"><i class="fa-solid fa-circle-exclamation"></i> البريد مسجل بالفعل أو صيغته غير صحيحة.</div>
                 </div>
+                
+                <div class="form-group" style="margin-bottom:15px">
+                    <label><i class="fa-solid fa-image"></i> اختر صورة البروفايل وعدل مقاساتها</label>
+                    <input type="file" id="regAvatarInput" accept="image/*" class="cyber-input" style="padding: 10px;">
+                    <div class="avatar-crop-container" id="regAvatarCropBox" style="display:none;">
+                        <div class="avatar-preview-box" id="regAvatarPrevBox">
+                            <img src="" id="regAvatarPreviewImg" alt="Preview">
+                        </div>
+                        <div class="crop-controls">
+                            <label>تحكم في المقاس (Zoom)</label>
+                            <input type="range" id="regAvatarZoom" min="100" max="300" value="100" class="crop-slider">
+                        </div>
+                    </div>
+                </div>
+
                 <div class="form-group" style="margin-bottom:15px">
                     <label>كلمة المرور</label>
                     <input type="password" id="regPass" placeholder="أنشئ كلمة مرور قوية" class="cyber-input">
@@ -1300,7 +1353,7 @@
 
     <div class="settings-modal" id="settingsModal">
         <div class="settings-card" style="max-width: 550px;">
-            <h3>إعدادات الحساب الإبداعية</h3>
+            <h3>إعدادات الحساب الإعدادية</h3>
             
             <div class="form-group" style="margin-bottom:20px; text-align:right;">
                 <label><i class="fa-solid fa-camera"></i> تغيير صورة البروفايل</label>
@@ -1512,6 +1565,74 @@
         const supabaseKey = 'sb_publishable_ooBRDKkNixnZFYJ-5Am5tA_QybONhv8';
         const _supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
+        // مراقبة وتفعيل أداة تعديل مقاسات صورة البروفايل تفاعلياً عند الإنشاء
+        let finalAvatarBase64 = "";
+        const regAvatarInput = document.getElementById('regAvatarInput');
+        const regAvatarCropBox = document.getElementById('regAvatarCropBox');
+        const regAvatarPreviewImg = document.getElementById('regAvatarPreviewImg');
+        const regAvatarZoom = document.getElementById('regAvatarZoom');
+
+        if(regAvatarInput) {
+            regAvatarInput.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if(file) {
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        regAvatarPreviewImg.src = event.target.result;
+                        regAvatarCropBox.style.display = 'flex';
+                        finalAvatarBase64 = event.target.result; 
+                        regAvatarPreviewImg.style.width = "100%";
+                        regAvatarPreviewImg.style.height = "auto";
+                        regAvatarPreviewImg.style.top = "0px";
+                        regAvatarPreviewImg.style.left = "0px";
+                        regAvatarZoom.value = 100;
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        }
+
+        if(regAvatarZoom) {
+            regAvatarZoom.addEventListener('input', function() {
+                regAvatarPreviewImg.style.transform = `scale(${this.value / 100})`;
+            });
+        }
+
+        // إمكانية سحب وتحريك الصورة داخل مساحة المعاينة الدائرية لضبط الأبعاد
+        let isDragging = false;
+        let startX, startY, imgLeft = 0, imgTop = 0;
+        if(regAvatarPreviewImg) {
+            regAvatarPreviewImg.addEventListener('mousedown', (e) => {
+                isDragging = true;
+                startX = e.clientX - imgLeft;
+                startY = e.clientY - imgTop;
+                e.preventDefault();
+            });
+            document.addEventListener('mousemove', (e) => {
+                if (!isDragging) return;
+                imgLeft = e.clientX - startX;
+                imgTop = e.clientY - startY;
+                regAvatarPreviewImg.style.left = imgLeft + 'px';
+                regAvatarPreviewImg.style.top = imgTop + 'px';
+            });
+            document.addEventListener('mouseup', () => { isDragging = false; });
+            
+            // دعم شاشات اللمس للهواتف الذكية
+            regAvatarPreviewImg.addEventListener('touchstart', (e) => {
+                isDragging = true;
+                startX = e.touches[0].clientX - imgLeft;
+                startY = e.touches[0].clientY - imgTop;
+            });
+            document.addEventListener('touchmove', (e) => {
+                if (!isDragging) return;
+                imgLeft = e.touches[0].clientX - startX;
+                imgTop = e.touches[0].clientY - startY;
+                regAvatarPreviewImg.style.left = imgLeft + 'px';
+                regAvatarPreviewImg.style.top = imgTop + 'px';
+            });
+            document.addEventListener('touchend', () => { isDragging = false; });
+        }
+
         // مراقبة حالة تسجيل الدخول تلقائيًا وتحديث شكل واجهة الهيدر
         _supabase.auth.onAuthStateChange((event, session) => {
             const loginNavLi = document.getElementById('loginNavLi');
@@ -1634,6 +1755,9 @@
             document.getElementById('regPass').value = '';
             document.getElementById('regPassConfirm').value = '';
             document.getElementById('regUsername').value = '';
+            if(document.getElementById('regAvatarInput')) document.getElementById('regAvatarInput').value = '';
+            if(regAvatarCropBox) regAvatarCropBox.style.display = 'none';
+            finalAvatarBase64 = "";
         }
 
         // دالة ترجمة وتوجيه رسائل خطأ Supabase بشكل مضمن احترافي
@@ -1726,7 +1850,7 @@
             }
         }
 
-        // دالة إنشاء حساب جديد مستقلة وحقيقية تماماً
+        // دالة إنشاء حساب جديد مستقلة وحقيقية تماماً تدعم الصورة المحدثة
         async function handleRegisterOnly() {
             const email = document.getElementById('regEmail').value.trim();
             const password = document.getElementById('regPass').value;
@@ -1753,7 +1877,10 @@
                 email, 
                 password,
                 options: {
-                    data: { username: username || email.split('@')[0] }
+                    data: { 
+                        username: username || email.split('@')[0],
+                        avatar_url: finalAvatarBase64 || "https://i.ibb.co/MyhstGh0/Picsart-26-07-10-23-47-06-393.png"
+                    }
                 }
             });
             
@@ -1848,7 +1975,7 @@
                 thankYouModal.classList.add('show');
                 cyberForm.reset();
             });
-            closeModalBtn.addEventListener('click', function() { thankyouModal.classList.remove('show'); window.location.href = "https://gridhub1.github.io/-/"; });
+            closeModalBtn.addEventListener('click', function() { thankYouModal.classList.remove('show'); window.location.href = "https://gridhub1.github.io/-/"; });
         }
 
         const pricingCheckbox = document.getElementById('pricing-checkbox');
