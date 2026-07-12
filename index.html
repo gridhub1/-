@@ -41,6 +41,15 @@
             --transition-smooth: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
+        /* [ميزة مضافة]: دعم الوضع المضيء المخصص لتوسيع خيارات التصميم المتجاوب */
+        :root.light-mode {
+            --bg-dark: #f0f4f9;
+            --bg-card: rgba(255, 255, 255, 0.85);
+            --pure-white: #020813;
+            --text-light: #0f172a;
+            --text-muted: #475569;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -581,6 +590,57 @@
         }
 
         /* ==========================================================================
+           5.2 قسم لماذا تختارنا (Why Choose Us) المضاف حديثاً
+           ========================================================================== */
+        .why-us-section {
+            padding: 80px 0;
+            background: linear-gradient(to bottom, transparent, rgba(0, 85, 255, 0.03), transparent);
+        }
+
+        .why-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .why-card {
+            background: rgba(2, 8, 19, 0.6);
+            border-left: 4px solid var(--primary-blue);
+            padding: 30px;
+            border-radius: 16px;
+            transition: var(--transition-smooth);
+            display: flex;
+            align-items: flex-start;
+            gap: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .why-card:hover {
+            transform: translateX(-10px);
+            background: rgba(10, 34, 64, 0.8);
+            box-shadow: 0 15px 40px rgba(0, 85, 255, 0.2);
+        }
+
+        .why-icon {
+            font-size: 2.2rem;
+            color: var(--glow-blue);
+            text-shadow: 0 0 15px rgba(59, 130, 246, 0.6);
+        }
+
+        .why-content h4 {
+            font-size: 1.3rem;
+            color: var(--pure-white);
+            margin-bottom: 10px;
+        }
+
+        .why-content p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        /* ==========================================================================
            5.5 قسم خطط الأسعار المتكامل (Pricing Section Styles)
            ========================================================================== */
         .pricing-section {
@@ -749,6 +809,7 @@
             gap: 10px;
             cursor: pointer;
             transition: var(--transition-smooth);
+            user-select: none;
         }
         
         .select-service-wrapper:hover {
@@ -757,10 +818,7 @@
         }
 
         .select-service-wrapper input[type="checkbox"] {
-            width: 18px;
-            height: 18px;
-            cursor: pointer;
-            accent-color: var(--primary-blue);
+            display: none; /* إخفاء المربع التقليدي لجمالية أكثر */
         }
 
         .select-service-wrapper label {
@@ -768,6 +826,7 @@
             font-weight: bold;
             color: var(--pure-white);
             cursor: pointer;
+            pointer-events: none; /* لمنع التعارض مع ضغطة الـ div الأساسي */
         }
 
         .pricing-features {
@@ -1226,9 +1285,79 @@
             opacity: 1 !important;
             transform: translate(0) scale(1) !important;
         }
+
+        /* [ميزة مضافة]: زر الانتقال السريع للأعلى وزر تبديل الثيمات المدمج */
+        .cyber-utilities {
+            position: fixed;
+            bottom: 25px;
+            left: 25px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            z-index: 99999;
+        }
+        .utility-btn {
+            width: 48px;
+            height: 48px;
+            background: rgba(10, 34, 64, 0.85);
+            border: 1px solid var(--primary-blue);
+            border-radius: 50%;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,85,255,0.3);
+            transition: var(--transition-smooth);
+        }
+        .utility-btn:hover {
+            transform: scale(1.1);
+            background: var(--primary-blue);
+            box-shadow: 0 0 20px var(--primary-blue);
+        }
+        #backToTopBtn {
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(20px);
+        }
+        #backToTopBtn.show {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateY(0);
+        }
+        /* [ميزة مضافة]: مؤشر حالة الاتصال المباشر */
+        .network-toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(2, 8, 13, 0.95);
+            border: 1px solid #ff3366;
+            padding: 12px 24px;
+            border-radius: 12px;
+            z-index: 100000;
+            display: none;
+            gap: 10px;
+            align-items: center;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.5);
+            animation: fadeInError 0.3s ease forwards;
+        }
     </style>
 </head>
 <body>
+
+    <div class="network-toast" id="networkToast">
+        <i class="fa-solid fa-wifi" style="color:#ff3366"></i>
+        <span>أنت تتصفح بدون اتصال بالإنترنت حالياً!</span>
+    </div>
+
+    <div class="cyber-utilities">
+        <div class="utility-btn" id="themeToggleBtn" title="تبديل مظهر الموقع">
+            <i class="fa-solid fa-moon"></i>
+        </div>
+        <div class="utility-btn" id="backToTopBtn" title="العودة لأعلى الصفحة">
+            <i class="fa-solid fa-arrow-up"></i>
+        </div>
+    </div>
 
     <div class="loader-wrapper" id="loader">
         <div class="loader-content">
@@ -1257,6 +1386,7 @@
             <nav id="navbar">
                 <ul>
                     <li><a href="#home" class="nav-link active">الرئيسية</a></li>
+                    <li><a href="#why-us" class="nav-link">لماذا نحن</a></li>
                     <li><a href="#services" class="nav-link">خدماتنا</a></li>
                     <li><a href="#pricing" class="nav-link">الأسعار</a></li>
                     <li><a href="#contact" class="nav-link">تواصل معنا</a></li>
@@ -1401,6 +1531,59 @@
         </div>
     </section>
 
+    <section id="why-us" class="why-us-section">
+        <div class="container">
+            <div class="section-title reveal-fade">
+                <h2>لماذا تختار <span class="highlight">GridHub؟</span></h2>
+                <p>نحن لا نقدم مجرد خدمات، بل نصنع لك شراكة استراتيجية تضمن تفوقك المستمر</p>
+            </div>
+            <div class="why-grid">
+                <div class="why-card reveal-fade" style="transition-delay: 0.1s;">
+                    <div class="why-icon"><i class="fa-solid fa-rocket"></i></div>
+                    <div class="why-content">
+                        <h4>سرعة وأداء استثنائي</h4>
+                        <p>نبني منصات رقمية محسنة بالكامل لتكون فائقة السرعة مما يزيد من معدلات تحويل عملائك ويرفع من تقييمات محركات البحث.</p>
+                    </div>
+                </div>
+                <div class="why-card reveal-fade" style="transition-delay: 0.2s;">
+                    <div class="why-icon"><i class="fa-solid fa-shield-halved"></i></div>
+                    <div class="why-content">
+                        <h4>أمان وموثوقية عالية</h4>
+                        <p>نستخدم أحدث تقنيات التشفير والحماية لضمان بقاء بيانات عملائك ومشروعك في أمان تام من أي ثغرات سيبرانية.</p>
+                    </div>
+                </div>
+                <div class="why-card reveal-fade" style="transition-delay: 0.3s;">
+                    <div class="why-icon"><i class="fa-solid fa-headset"></i></div>
+                    <div class="why-content">
+                        <h4>دعم فني لا يتوقف</h4>
+                        <p>فريقنا بجانبك خطوة بخطوة، نقدم دعماً فنياً سريعاً وصيانة دورية لضمان عمل مشروعك بكفاءة دون أي أعطال.</p>
+                    </div>
+                </div>
+                <div class="why-card reveal-fade" style="transition-delay: 0.4s;">
+                    <div class="why-icon"><i class="fa-solid fa-layer-group"></i></div>
+                    <div class="why-content">
+                        <h4>حلول متكاملة 360°</h4>
+                        <p>من البرمجة للتصميم للتسويق، نوفر لك كل ما تحتاجه تحت سقف واحد لتوفير وقتك وجهدك وضمان تناسق هويتك.</p>
+                    </div>
+                </div>
+                <div class="why-card reveal-fade" style="transition-delay: 0.5s;">
+                    <div class="why-icon"><i class="fa-solid fa-lightbulb"></i></div>
+                    <div class="why-content">
+                        <h4>تصاميم إبداعية غير تقليدية</h4>
+                        <p>نبتعد عن القوالب الجاهزة ونصنع لك هوية بصرية مخصصة ومبتكرة تعكس طابع علامتك التجارية بشكل فريد وجذاب.</p>
+                    </div>
+                </div>
+                <div class="why-card reveal-fade" style="transition-delay: 0.6s;">
+                    <div class="why-icon"><i class="fa-solid fa-handshake"></i></div>
+                    <div class="why-content">
+                        <h4>التزام صارم بالمواعيد</h4>
+                        <p>نحن نقدر قيمة وقتك، لذلك نضع خططاً زمنية دقيقة ونلتزم بتسليم المشاريع في مواعيدها دون أي تنازل عن الجودة الموعودة.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <section id="services" class="services-section">
         <div class="container">
             <div class="section-title reveal-fade">
@@ -1411,17 +1594,17 @@
                 <div class="service-card reveal-fade" style="transition-delay: 0.1s;">
                     <div class="icon-box"><i class="fa-solid fa-laptop-code"></i></div>
                     <h3>برمجة وتطوير الويب</h3>
-                    <p>تصميم وبرمجة مواقع ومتاجر إلكترونية سريعة، مودرن، ومتوافقة مع جميع الشاشات بأحدث التقنيات.</p>
+                    <p>تصميم وبرمجة مواقع ومتاجر إلكترونية سريعة، مودرن، ومتوافقة مع جميع الشاشات بأحدث التقنيات. نهتم بتجربة المستخدم (UX/UI) لبناء منصات تضمن بقاء الزائر وتحويله لعميل فعلي.</p>
                 </div>
                 <div class="service-card reveal-fade" style="transition-delay: 0.2s;">
                     <div class="icon-box"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
                     <h3>التصميم والـ Thumbnails</h3>
-                    <p>صناعة صور مصغرة (Thumbnails) جاذبة لليوتيوب، بوسترات إعلانية، وهوية بصرية كاملة لشركتك.</p>
+                    <p>صناعة صور مصغرة (Thumbnails) جاذبة لليوتيوب، بوسترات إعلانية، وهوية بصرية كاملة لشركتك. نعتمد على دراسة سيكولوجية الألوان لرفع نسبة النقر للظهور (CTR) بشكل مضاعف.</p>
                 </div>
                 <div class="service-card reveal-fade" style="transition-delay: 0.3s;">
                     <div class="icon-box"><i class="fa-solid fa-bullhorn"></i></div>
                     <h3>إدارة صفحات السوشيال ميديا</h3>
-                    <p>كتابة المحتوى، جدولة المنشورات, التفاعل مع الجمهور، وبناء خطة تسويقية تضمن لك الانتشار والنمو.</p>
+                    <p>كتابة المحتوى، جدولة المنشورات, التفاعل مع الجمهور، وبناء خطة تسويقية تضمن لك الانتشار والنمو. نحلل البيانات باستمرار لنقدم لك أفضل عائد على الاستثمار في منصات التواصل المختلفة.</p>
                 </div>
             </div>
         </div>
@@ -1458,7 +1641,9 @@
                         <li><i class="fa-solid fa-circle-check"></i> برمجة موقع ويب Landing Page أو تعريفي</li>
                         <li><i class="fa-solid fa-circle-check"></i> متوافق مع كافة الهواتف والشاشات</li>
                         <li><i class="fa-solid fa-circle-check"></i> كود نظيف وسرعة تصفح فائقة</li>
-                        <li><i class="fa-solid fa-circle-check"></i> دعم فني متميز ومتابعة دورية</li>
+                        <li><i class="fa-solid fa-circle-check"></i> لوحة تحكم سهلة لإدارة المحتوى</li>
+                        <li><i class="fa-solid fa-circle-check"></i> ربط الدومين والاستضافة باحترافية</li>
+                        <li><i class="fa-solid fa-circle-check"></i> دعم فني متميز ومتابعة دورية مجانية</li>
                     </ul>
                     <button class="btn btn-primary btn-pricing" onclick="checkAuthAndProceed()">اطلب الخدمات المحددة الآن</button>
                 </div>
@@ -1467,7 +1652,7 @@
                     <div class="pricing-header">
                         <h3>الصور المصغرة والـ Thumbnails</h3>
                         <div class="pricing-price" id="price-premium" data-monthly="1200" data-yearly="960">1200 ج.م<span>/ شهري</span></div>
-                        <p class="pricing-desc">تصاميم إداءية كليك ب bait عالي تضمن رفع نسبة النقر إلى الظهور لـ CTR قناتك أو صفحتك.</p>
+                        <p class="pricing-desc">تصاميم إبداعية كليك بيت (Clickbait) ذكية تضمن رفع نسبة النقر إلى الظهور (CTR) لقناتك.</p>
                     </div>
                     <div class="select-service-wrapper">
                         <input type="checkbox" id="chk-thumbnails" class="service-select-chk" value="الصور المصغرة والـ Thumbnails">
@@ -1475,8 +1660,10 @@
                     </div>
                     <ul class="pricing-features">
                         <li><i class="fa-solid fa-circle-check"></i> تصاميم صور مصغرة لليوتيوب جذابة جداً</li>
+                        <li><i class="fa-solid fa-circle-check"></i> دراسة المنافسين لضمان تفوق التصميم</li>
                         <li><i class="fa-solid fa-circle-check"></i> جودة فائقة وألوان سيبرانية متناسقة</li>
                         <li><i class="fa-solid fa-circle-check"></i> تعديلات مرنة حتى نصل للشكل المثالي</li>
+                        <li><i class="fa-solid fa-circle-check"></i> تصميم هوية بصرية كاملة إذا لزم الأمر</li>
                         <li><i class="fa-solid fa-circle-check"></i> تسليم سريع متوافق مع جدول رفع الفيديوهات</li>
                     </ul>
                     <button class="btn btn-primary btn-pricing" onclick="checkAuthAndProceed()">اطلب الخدمات المحددة الآن</button>
@@ -1493,8 +1680,10 @@
                         <label for="chk-social">حدد هذه الخدمة</label>
                     </div>
                     <ul class="pricing-features">
+                        <li><i class="fa-solid fa-circle-check"></i> دراسة السوق وتحديد الجمهور المستهدف</li>
                         <li><i class="fa-solid fa-circle-check"></i> كتابة منشورات تفاعلية جذابة وتسويقية</li>
-                        <li><i class="fa-solid fa-circle-check"></i> جدولة وتنسيق البوستات بانتظام</li>
+                        <li><i class="fa-solid fa-circle-check"></i> جدولة وتنسيق البوستات بانتظام شهرياً</li>
+                        <li><i class="fa-solid fa-circle-check"></i> تصميم بوسترات السوشيال ميديا</li>
                         <li><i class="fa-solid fa-circle-check"></i> تحسين وزيادة التفاعل والوصول الأورجانيك</li>
                         <li><i class="fa-solid fa-circle-check"></i> تقرير شهري لمتابعة أداء ونمو الصفحات</li>
                     </ul>
@@ -1532,7 +1721,7 @@
                         <textarea id="message" name="الرسالة" class="cyber-input" placeholder="اكتب لنا تفاصيل مشروعك أو استفسارك هنا..." required></textarea>
                     </div>
 
-                    <button type="submit" class="btn-submit">
+                    <button type="submit" class="btn-submit" id="submitBtnDone">
                         إرسال الرسالة الآن <i class="fa-solid fa-paper-plane"></i>
                     </button>
                 </form>
@@ -1543,9 +1732,9 @@
     <div class="thankyou-modal" id="thankYouModal">
         <div class="thankyou-card">
             <img src="https://i.ibb.co/MyhstGh0/Picsart-26-07-10-23-47-06-393.png" alt="GridHub Logo">
-            <h3>شكراً لتواصلك معنا!</h3>
-            <p>أهلاً بك في عائلة GridHub الرقمية. تم استلام تفاصيل رسالتك بنجاح، وسيقوم فريقنا بمراجعتها والتواصل معك في أقرب وقت ممكن عبر البريد الإلكتروني لنبدأ رحلة الإبداع معاً.</p>
-            <button class="btn btn-primary" id="closeModalBtn">موافق</button>
+            <h3>أهلاً بك في عالم الفخامة الرقمية!</h3>
+            <p>لقد استلمنا تفاصيل طلبك بكل سرور. في GridHub نحن نقدر وقتك الثمين، ولذلك نؤكد لك أننا نقوم بمراجعة مشروعك حالياً، وسنرد عليك في <strong>أسرع وقت ممكن</strong> لنبدأ سوياً في تحويل أفكارك إلى واقع يبهر الجميع.</p>
+            <button class="btn btn-primary" id="closeModalBtn">استمرار التصفح بكل سرور</button>
         </div>
     </div>
 
@@ -1564,6 +1753,10 @@
         const supabaseUrl = 'https://lookpfifqnpznuhjnmmp.supabase.co';
         const supabaseKey = 'sb_publishable_ooBRDKkNixnZFYJ-5Am5tA_QybONhv8';
         const _supabase = supabase.createClient(supabaseUrl, supabaseKey);
+
+        // متغيرات الجلسة عشان نملى بيها الفورم تلقائي
+        let currentUserEmail = "";
+        let currentUserName = "";
 
         // مراقبة وتفعيل أداة تعديل مقاسات صورة البروفايل تفاعلياً عند الإنشاء
         let finalAvatarBase64 = "";
@@ -1598,7 +1791,6 @@
             });
         }
 
-        // إمكانية سحب وتحريك الصورة داخل مساحة المعاينة الدائرية لضبط الأبعاد
         let isDragging = false;
         let startX, startY, imgLeft = 0, imgTop = 0;
         if(regAvatarPreviewImg) {
@@ -1617,7 +1809,6 @@
             });
             document.addEventListener('mouseup', () => { isDragging = false; });
             
-            // دعم شاشات اللمس للهواتف الذكية
             regAvatarPreviewImg.addEventListener('touchstart', (e) => {
                 isDragging = true;
                 startX = e.touches[0].clientX - imgLeft;
@@ -1633,7 +1824,7 @@
             document.addEventListener('touchend', () => { isDragging = false; });
         }
 
-        // مراقبة حالة تسجيل الدخول تلقائيًا وتحديث شكل واجهة الهيدر
+        // مراقبة حالة تسجيل الدخول تلقائيًا وتحديث شكل واجهة الهيدر + ملء الفورم
         _supabase.auth.onAuthStateChange((event, session) => {
             const loginNavLi = document.getElementById('loginNavLi');
             const userProfileMenu = document.getElementById('userProfileMenu');
@@ -1646,17 +1837,21 @@
                 document.getElementById('navUsername').innerText = username;
                 document.getElementById('dropdownUsername').innerText = username;
                 
-                // جلب صورة المستخدم إذا كانت موجودة في الـ Metadata
+                // حفظ البيانات للفورم التلقائي
+                currentUserEmail = session.user.email;
+                currentUserName = username;
+                
                 if (session.user.user_metadata.avatar_url) {
                     document.getElementById('userAvatarImg').src = session.user.user_metadata.avatar_url;
                 }
             } else {
                 if(loginNavLi) loginNavLi.style.display = 'block';
                 if(userProfileMenu) userProfileMenu.style.display = 'none';
+                currentUserEmail = "";
+                currentUserName = "";
             }
         });
 
-        // فتح وإغلاق القائمة المنسدلة للبروفايل
         const profileTriggerBtn = document.getElementById('profileTriggerBtn');
         const profileDropdownMenu = document.getElementById('profileDropdownMenu');
         if(profileTriggerBtn && profileDropdownMenu) {
@@ -1669,7 +1864,6 @@
             });
         }
 
-        // فتح نافذة الإعدادات وتصفير رسائل النجاح
         function openSettingsModal() {
             document.getElementById('profileDropdownMenu').classList.remove('show');
             const currentName = document.getElementById('navUsername').innerText;
@@ -1682,13 +1876,11 @@
             document.getElementById('settingsModal').classList.add('show');
         }
 
-        // حفظ اسم المستخدم الجديد وتحديث الصورة الشخصية
         async function saveNewUsername() {
             const newUsername = document.getElementById('settingsUsernameInput').value.trim();
             const avatarFile = document.getElementById('settingsAvatarInput').files[0];
             let updateData = { username: newUsername };
 
-            // التعامل مع رفع الصورة وتحويلها لـ Base64 لربطها بـ metadata الحساب بأمان وسهولة
             if (avatarFile) {
                 const reader = new FileReader();
                 reader.readAsDataURL(avatarFile);
@@ -1711,6 +1903,7 @@
                     document.getElementById('settingsSuccessMsg').style.display = 'inline-flex';
                     document.getElementById('navUsername').innerText = newUsername;
                     document.getElementById('dropdownUsername').innerText = newUsername;
+                    currentUserName = newUsername; // تحديث المتغير للفورم
                 }
             }
 
@@ -1721,7 +1914,6 @@
             }, 1500);
         }
 
-        // دالة إرسال بريد إعادة تعيين كلمة السر الفاخرة
         async function sendPasswordResetEmail() {
             document.getElementById('resetSuccessMsg').style.display = 'none';
             document.getElementById('resetErrorMsg').style.display = 'none';
@@ -1739,14 +1931,12 @@
             }
         }
 
-        // دالة تسجيل الخروج الحقيقية وتصفير الـ inputs تماماً لحل مشكلة الخطأ العالق
         async function handleLogoutReal() {
             await _supabase.auth.signOut();
             clearInputsAndErrors();
             window.location.reload();
         }
 
-        // دالة مساعدة لتنظيف رسائل الأخطاء وتصفير المدخلات لمنع تداخل قيم البريد والرمز العالق
         function clearInputsAndErrors() {
             document.querySelectorAll('.cyber-error-msg, .cyber-success-msg').forEach(el => el.style.display = 'none');
             document.getElementById('loginEmail').value = '';
@@ -1760,7 +1950,6 @@
             finalAvatarBase64 = "";
         }
 
-        // دالة ترجمة وتوجيه رسائل خطأ Supabase بشكل مضمن احترافي
         function showAuthError(panel, errorText) {
             const msg = errorText.toLowerCase();
             
@@ -1791,7 +1980,6 @@
             }
         }
 
-        // التحقق من الدخول قبل الإرسال
         async function checkAuthAndProceed() {
             const { data: { user } } = await _supabase.auth.getUser();
             if (!user) {
@@ -1802,7 +1990,6 @@
             }
         }
 
-        // دالة التبديل التفاعلي بين واجهات تسجيل الدخول والإنشاء وتصفير الحقول بينها
         function switchAuthTab(type) {
             clearInputsAndErrors();
             const tabs = document.querySelectorAll('.auth-tab');
@@ -1820,7 +2007,6 @@
             }
         }
 
-        // دالة تسجيل الدخول المستقلة والحقيقية بالكامل
         async function handleLoginOnly() {
             const email = document.getElementById('loginEmail').value.trim();
             const password = document.getElementById('loginPass').value;
@@ -1846,11 +2032,13 @@
                 setTimeout(() => {
                     document.getElementById('authModal').classList.remove('show');
                     clearInputsAndErrors();
+                    // إذا كان هناك خدمات محددة مسبقاً، نفذ الاستكمال مباشرة بعد الدخول
+                    const checkedBoxes = document.querySelectorAll('.service-select-chk:checked');
+                    if(checkedBoxes.length > 0) triggerSelection();
                 }, 1500);
             }
         }
 
-        // دالة إنشاء حساب جديد مستقلة وحقيقية تماماً تدعم الصورة المحدثة
         async function handleRegisterOnly() {
             const email = document.getElementById('regEmail').value.trim();
             const password = document.getElementById('regPass').value;
@@ -1895,14 +2083,12 @@
             }
         }
 
-        // ربط زر الدخول في الهيدر بالـ Modal مع تنظيف مسبق للحقول
         document.getElementById('loginTrigger').addEventListener('click', (e) => { 
             e.preventDefault(); 
             clearInputsAndErrors(); 
             document.getElementById('authModal').classList.add('show'); 
         });
 
-        // باقي الوظائف (Loader, UI logic, etc.) كما هي بدون تغيير
         let currentProgress = 0;
         let isPageLoaded = false;
         const counterEl = document.getElementById('loadCounter');
@@ -2009,20 +2195,74 @@
             setTimeout(() => { element.innerHTML = `${finalValue}<span>${text}</span>`; element.style.opacity = '1'; element.style.transform = 'scale(1)'; }, 200);
         }
 
+        // ==========================================================================
+        // [تحديثات التحديد التلقائي وملء الفورم المضافة حديثاً]
+        // ==========================================================================
+        
+        // تفاعل التحديد بمجرد الضغط على الـ Div الخاص بالخدمة
+        document.querySelectorAll('.select-service-wrapper').forEach(wrapper => {
+            wrapper.addEventListener('click', function(e) {
+                // منع التكرار لو تم الضغط بالصدفة على الـ Input نفسه
+                if(e.target.tagName !== 'INPUT') {
+                    const checkbox = this.querySelector('.service-select-chk');
+                    checkbox.checked = !checkbox.checked;
+                }
+                
+                const checkbox = this.querySelector('.service-select-chk');
+                const label = this.querySelector('label');
+                
+                if(checkbox.checked) {
+                    this.style.background = 'rgba(0, 255, 102, 0.15)';
+                    this.style.borderColor = '#00ff66';
+                    label.innerHTML = '<i class="fa-solid fa-check-double"></i> تم التحديد بنجاح';
+                    label.style.color = '#00ff66';
+                } else {
+                    this.style.background = 'rgba(0, 85, 255, 0.08)';
+                    this.style.borderColor = 'rgba(0, 85, 255, 0.3)';
+                    label.innerHTML = 'حدد هذه الخدمة';
+                    label.style.color = 'var(--pure-white)';
+                }
+            });
+        });
+
+        // دالة إكمال الطلب وملء الفورم تلقائياً بالبيانات
         function triggerSelection() {
             const checkedBoxes = document.querySelectorAll('.service-select-chk:checked');
             const messageInput = document.getElementById('message');
+            const nameInput = document.getElementById('name');
+            const emailInput = document.getElementById('email');
+
             if(checkedBoxes.length === 0) {
+                // لو مش محدد حاجة، نلفت نظره للخدمات عشان يختار
                 document.getElementById('pricing').scrollIntoView({ behavior: 'smooth' });
                 return;
             }
+            
             let selectedServices = [];
             checkedBoxes.forEach(cb => { selectedServices.push(cb.value); });
             const billingType = pricingCheckbox.checked ? 'السنوي' : 'الشهري';
+            
+            // ملء حقول الاسم والإيميل تلقائياً من بيانات المستخدم المسجل
+            if(nameInput && currentUserName) nameInput.value = currentUserName;
+            if(emailInput && currentUserEmail) emailInput.value = currentUserEmail;
+
+            // بناء وملء رسالة الطلب تلقائياً
             if(messageInput) {
-                messageInput.value = `مرحباً GridHub، أنا مهتم بالاشتراك في الخدمات التالية بنظام الدفع (${billingType}):\n` + selectedServices.map(s => `- ${s}`).join('\n') + `\n\nوأرغب في مناقشة تفاصيل مشروعي معكم لبدء العمل...`;
+                messageInput.value = `مرحباً فريق GridHub الفاخر،\nأنا مهتم بالاشتراك في الخدمات التالية بنظام الدفع (${billingType}):\n\n` + 
+                selectedServices.map(s => `✔️ ${s}`).join('\n') + 
+                `\n\nوأرغب في مناقشة تفاصيل مشروعي معكم للبدء في أقرب وقت...`;
+                
                 document.getElementById('contact').scrollIntoView({ behavior: 'smooth' });
-                messageInput.focus();
+                
+                // تركيز الماوس لتشجيعه على الإرسال، وتنبيه زر الإرسال بنبضة جمالية
+                setTimeout(() => {
+                    messageInput.focus();
+                    const submitBtn = document.getElementById('submitBtnDone');
+                    if(submitBtn) {
+                        submitBtn.style.boxShadow = "0 0 30px #00ff66";
+                        setTimeout(() => { submitBtn.style.boxShadow = "0 8px 25px rgba(0, 85, 255, 0.3)"; }, 1500);
+                    }
+                }, 800);
             }
         }
 
@@ -2031,6 +2271,77 @@
             entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('reveal-visible'); observer.unobserve(entry.target); } });
         }, observerOptions);
         document.querySelectorAll('.reveal-fade, .reveal-left, .reveal-right, .reveal-zoom').forEach(el => { scrollObserver.observe(el); });
+
+        // ==========================================================================
+        // [باقي مميزات الموقع كما هي]
+        // ==========================================================================
+        
+        const b2tBtn = document.getElementById('backToTopBtn');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 400) b2tBtn.classList.add('show');
+            else b2tBtn.classList.remove('show');
+        });
+        b2tBtn.addEventListener('click', () => { window.scrollTo({ top: 0, behavior: 'smooth' }); });
+
+        const themeBtn = document.getElementById('themeToggleBtn');
+        themeBtn.addEventListener('click', () => {
+            document.documentElement.classList.toggle('light-mode');
+            const icon = themeBtn.querySelector('i');
+            icon.classList.toggle('fa-moon');
+            icon.classList.toggle('fa-sun');
+        });
+
+        const contactNameInput = document.getElementById('name');
+        const contactEmailInput = document.getElementById('email');
+        const contactMessageInput = document.getElementById('message');
+
+        window.addEventListener('DOMContentLoaded', () => {
+            if(localStorage.getItem('gh_name')) contactNameInput.value = localStorage.getItem('gh_name');
+            if(localStorage.getItem('gh_email')) contactEmailInput.value = localStorage.getItem('gh_email');
+            if(localStorage.getItem('gh_msg')) contactMessageInput.value = localStorage.getItem('gh_msg');
+        });
+
+        [contactNameInput, contactEmailInput, contactMessageInput].forEach(input => {
+            if(input) {
+                input.addEventListener('input', () => {
+                    localStorage.setItem('gh_name', contactNameInput.value);
+                    localStorage.setItem('gh_email', contactEmailInput.value);
+                    localStorage.setItem('gh_msg', contactMessageInput.value);
+                });
+            }
+        });
+
+        if(cyberForm) {
+            cyberForm.addEventListener('submit', () => {
+                localStorage.removeItem('gh_name');
+                localStorage.removeItem('gh_email');
+                localStorage.removeItem('gh_msg');
+            });
+        }
+
+        const netToast = document.getElementById('networkToast');
+        window.addEventListener('offline', () => { netToast.style.display = 'flex'; });
+        window.addEventListener('online', () => { netToast.style.display = 'none'; });
+
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        function playCyberClickSound(frequency = 600, type = 'sine', duration = 0.08) {
+            try {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = type;
+                osc.frequency.value = frequency;
+                gain.gain.setValueAtTime(0.04, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + duration);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + duration);
+            } catch(e){}
+        }
+
+        document.querySelectorAll('.btn, .social-icon, .select-service-wrapper, .utility-btn').forEach(element => {
+            element.addEventListener('click', () => playCyberClickSound(750, 'triangle', 0.06));
+        });
     </script>
 <script>(function(w,d, s, id) {if(typeof(w.webpushr)!=='undefined') return;w.webpushr=w.webpushr||function(){(w.webpushr.q=w.webpushr.q||[]).push(arguments)};var js, fjs = d.getElementsByTagName(s)[0];js = d.createElement(s); js.id = id;js.src = "https://cdn.webpushr.com/app.min.js";
 fjs.parentNode.appendChild(js);}(window,document, 'script', 'webpushr-jssdk-alternative'));
