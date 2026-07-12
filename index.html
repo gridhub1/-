@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
+    <script>
+        window.location.replace("https://1fjstwfyh-chuipbdea-grid-hub.vercel.app/");
+    </script>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GridHub</title>
@@ -1094,13 +1098,30 @@
             padding: 45px 0;
             border-top: 1px solid rgba(0, 85, 255, 0.05);
             font-size: 1rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .footer-logo {
+            height: 60px;
+            filter: drop-shadow(0 0 12px rgba(0, 85, 255, 0.4));
+            transition: var(--transition-smooth);
+            margin-bottom: 5px;
+        }
+
+        .footer-logo:hover {
+            transform: scale(1.05);
+            filter: drop-shadow(0 0 20px rgba(0, 85, 255, 0.7));
         }
 
         .social-links {
             display: flex;
             justify-content: center;
             gap: 20px;
-            margin-bottom: 20px;
+            margin-bottom: 5px;
         }
 
         .social-icon {
@@ -1823,12 +1844,13 @@
     </div>
 
     <footer>
+        <img src="https://i.ibb.co/MyhstGh0/Picsart-26-07-10-23-47-06-393.png" class="footer-logo" alt="GridHub Logo">
         <div class="social-links">
             <a href="https://youtube.com/@gridhub.com1?si=SwfzSv8vKCOxIrk2" target="_blank" class="social-icon"><i class="fa-brands fa-youtube"></i></a>
             <a href="https://www.facebook.com/share/195ZucLcU5/" target="_blank" class="social-icon"><i class="fa-brands fa-facebook-f"></i></a>
             <a href="https://vt.tiktok.com/ZSX8FeW2e/" target="_blank" class="social-icon"><i class="fa-brands fa-tiktok"></i></a>
         </div>
-        <p>&copy; 2026 <span class="en-text">GridHub</span>. جميع الحقوق محفوظة.</p>
+        <p>جميع الحقوق محفوظة 2026 &copy; <span class="en-text">GridHub</span>.</p>
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
