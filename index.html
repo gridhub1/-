@@ -797,6 +797,7 @@
             display: flex;
             flex-direction: column;
             gap: 8px;
+            position: relative;
         }
 
         .form-group label {
@@ -856,6 +857,36 @@
             box-shadow: 0 12px 30px rgba(0, 85, 255, 0.5);
             background: linear-gradient(45deg, var(--pure-white), var(--primary-blue));
             color: var(--pure-white);
+        }
+
+        /* استايل فخم جداً مخصص لرسائل الخطأ الذكية المضمنة */
+        .cyber-error-msg {
+            color: #ff3366;
+            font-size: 0.95rem;
+            font-weight: bold;
+            margin-top: 6px;
+            display: none;
+            align-items: center;
+            gap: 8px;
+            text-shadow: 0 0 10px rgba(255, 51, 102, 0.3);
+            animation: fadeInError 0.4s ease forwards;
+        }
+        
+        .cyber-success-msg {
+            color: #00ff66;
+            font-size: 0.95rem;
+            font-weight: bold;
+            margin-top: 6px;
+            display: none;
+            align-items: center;
+            gap: 8px;
+            text-shadow: 0 0 10px rgba(0, 255, 102, 0.3);
+            animation: fadeInError 0.4s ease forwards;
+        }
+
+        @keyframes fadeInError {
+            from { opacity: 0; transform: translateY(-5px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         /* ==========================================================================
@@ -1110,10 +1141,13 @@
                 <div class="form-group" style="margin-bottom:15px">
                     <label>البريد الإلكتروني</label>
                     <input type="email" id="loginEmail" placeholder="name@example.com" class="cyber-input">
+                    <div class="cyber-error-msg" id="loginEmailError"><i class="fa-solid fa-circle-exclamation"></i> البريد الإلكتروني غير مسجل أو غير صحيح.</div>
                 </div>
                 <div class="form-group" style="margin-bottom:20px">
                     <label>كلمة المرور</label>
                     <input type="password" id="loginPass" placeholder="أدخل كلمة المرور" class="cyber-input">
+                    <div class="cyber-error-msg" id="loginPassError"><i class="fa-solid fa-key"></i> خطأ في كلمة المرور، يرجى إعادة التحقق منها.</div>
+                    <div class="cyber-success-msg" id="loginSuccess"><i class="fa-solid fa-circle-check"></i> أهلاً بك مجدداً! تم تسجيل الدخول...</div>
                 </div>
                 <button class="btn btn-primary" style="width:100%" onclick="handleLoginOnly()">تسجيل الدخول</button>
             </div>
@@ -1122,14 +1156,18 @@
                 <div class="form-group" style="margin-bottom:15px">
                     <label>البريد الإلكتروني</label>
                     <input type="email" id="regEmail" placeholder="name@example.com" class="cyber-input">
+                    <div class="cyber-error-msg" id="regEmailError"><i class="fa-solid fa-circle-exclamation"></i> البريد مسجل بالفعل أو صيغته غير صحيحة.</div>
                 </div>
                 <div class="form-group" style="margin-bottom:15px">
                     <label>كلمة المرور</label>
                     <input type="password" id="regPass" placeholder="أنشئ كلمة مرور قوية" class="cyber-input">
+                    <div class="cyber-error-msg" id="regPassError" style="line-height: 1.4; text-align: justify;"><i class="fa-solid fa-triangle-exclamation"></i> يجب أن تحتوي كلمة المرور على: حروف كبيرة (A-Z)، صغيرة (a-z)، أرقام (0-9)، ورموز خاصة مثل (!@#$).</div>
                 </div>
                 <div class="form-group" style="margin-bottom:20px">
                     <label>تأكيد كلمة المرور</label>
                     <input type="password" id="regPassConfirm" placeholder="أعد كتابة كلمة المرور" class="cyber-input">
+                    <div class="cyber-error-msg" id="regPassConfirmError"><i class="fa-solid fa-circle-xmark"></i> كلمات المرور غير متطابقة إطلاقاً.</div>
+                    <div class="cyber-success-msg" id="regSuccess"><i class="fa-solid fa-envelope-circle-check"></i> تم إنشاء الحساب! يرجى مراجعة بريدك الإلكتروني للتفعيل.</div>
                 </div>
                 <button class="btn btn-primary" style="width:100%" onclick="handleRegisterOnly()">إنشاء حساب جديد</button>
             </div>
@@ -1225,7 +1263,7 @@
                     <div class="pricing-header">
                         <h3>الصور المصغرة والـ Thumbnails</h3>
                         <div class="pricing-price" id="price-premium" data-monthly="1200" data-yearly="960">1200 ج.م<span>/ شهري</span></div>
-                        <p class="pricing-desc">تصاميم إبداعية كليك ب bait عالي تضمن رفع نسبة النقر إلى الظهور لـ CTR قناتك أو صفحتك.</p>
+                        <p class="pricing-desc">تصاميم إداءية كليك ب bait عالي تضمن رفع نسبة النقر إلى الظهور لـ CTR قناتك أو صفحتك.</p>
                     </div>
                     <div class="select-service-wrapper">
                         <input type="checkbox" id="chk-thumbnails" class="service-select-chk" value="الصور المصغرة والـ Thumbnails">
@@ -1323,11 +1361,47 @@
         const supabaseKey = 'sb_publishable_ooBRDKkNixnZFYJ-5Am5tA_QybONhv8';
         const _supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
+        // دالة مساعدة لتنظيف رسائل الأخطاء السابقة
+        function clearAuthErrors() {
+            document.querySelectorAll('.cyber-error-msg, .cyber-success-msg').forEach(el => el.style.display = 'none');
+        }
+
+        // دالة ترجمة وتوجيه رسائل خطأ Supabase بشكل مضمن احترافي
+        function showAuthError(panel, errorText) {
+            clearAuthErrors();
+            const msg = errorText.toLowerCase();
+            
+            if (panel === 'login') {
+                if (msg.includes('invalid login credentials') || msg.includes('cannot find') || msg.includes('user not found')) {
+                    document.getElementById('loginPassError').innerText = "خطأ: البريد الإلكتروني أو كلمة المرور غير صحيحة.";
+                    document.getElementById('loginPassError').style.display = 'inline-flex';
+                } else if (msg.includes('email')) {
+                    document.getElementById('loginEmailError').innerText = "صيغة البريد الإلكتروني غير صالحة.";
+                    document.getElementById('loginEmailError').style.display = 'inline-flex';
+                } else {
+                    document.getElementById('loginPassError').innerText = "حدث خطأ غير متوقع: " + errorText;
+                    document.getElementById('loginPassError').style.display = 'inline-flex';
+                }
+            } else if (panel === 'register') {
+                if (msg.includes('password should contain') || msg.includes('password up to') || msg.includes('weak password')) {
+                    document.getElementById('regPassError').style.display = 'inline-flex';
+                } else if (msg.includes('already registered') || msg.includes('user already exists')) {
+                    document.getElementById('regEmailError').innerText = "هذا البريد الإلكتروني مسجل بالفعل لدينا.";
+                    document.getElementById('regEmailError').style.display = 'inline-flex';
+                } else if (msg.includes('email')) {
+                    document.getElementById('regEmailError').innerText = "يرجى إدخال بريد إلكتروني صحيح.";
+                    document.getElementById('regEmailError').style.display = 'inline-flex';
+                } else {
+                    document.getElementById('regPassConfirmError').innerText = "حدث خطأ: " + errorText;
+                    document.getElementById('regPassConfirmError').style.display = 'inline-flex';
+                }
+            }
+        }
+
         // التحقق من الدخول قبل الإرسال
         async function checkAuthAndProceed() {
             const { data: { user } } = await _supabase.auth.getUser();
             if (!user) {
-                alert("يرجى تسجيل الدخول أولاً لإتمام طلبك.");
                 document.getElementById('authModal').classList.add('show');
             } else {
                 triggerSelection();
@@ -1336,6 +1410,7 @@
 
         // دالة التبديل التفاعلي بين واجهات تسجيل الدخول والإنشاء
         function switchAuthTab(type) {
+            clearAuthErrors();
             const tabs = document.querySelectorAll('.auth-tab');
             const panels = document.querySelectorAll('.auth-panel');
             
@@ -1353,45 +1428,72 @@
 
         // دالة تسجيل الدخول المستقلة والحقيقية بالكامل
         async function handleLoginOnly() {
+            clearAuthErrors();
             const email = document.getElementById('loginEmail').value;
             const password = document.getElementById('loginPass').value;
             
-            if (!email || !password) { alert("برجاء ملء كافة الحقول المطلوبة."); return; }
+            if (!email) {
+                document.getElementById('loginEmailError').innerText = "برجاء كتابة البريد الإلكتروني الخاص بك.";
+                document.getElementById('loginEmailError').style.display = 'inline-flex';
+                return;
+            }
+            if (!password) {
+                document.getElementById('loginPassError').innerText = "برجاء كتابة كلمة المرور.";
+                document.getElementById('loginPassError').style.display = 'inline-flex';
+                return;
+            }
             
             const { data, error } = await _supabase.auth.signInWithPassword({ email, password });
             if (error) {
-                alert("خطأ في تسجيل الدخول: " + error.message);
+                showAuthError('login', error.message);
             } else {
-                alert("تم تسجيل الدخول بنجاح! أهلاً بك مجدداً.");
-                document.getElementById('authModal').classList.remove('show');
+                document.getElementById('loginSuccess').style.display = 'inline-flex';
+                setTimeout(() => {
+                    document.getElementById('authModal').classList.remove('show');
+                    clearAuthErrors();
+                }, 1500);
             }
         }
 
         // دالة إنشاء حساب جديد مستقلة وحقيقية تماماً
         async function handleRegisterOnly() {
+            clearAuthErrors();
             const email = document.getElementById('regEmail').value;
             const password = document.getElementById('regPass').value;
             const passwordConfirm = document.getElementById('regPassConfirm').value;
             
-            if (!email || !password || !passwordConfirm) { alert("برجاء ملء جميع الحقول."); return; }
-            if (password !== passwordConfirm) { alert("خطأ: كلمات المرور غير متطابقة."); return; }
+            if (!email) {
+                document.getElementById('regEmailError').innerText = "برجاء كتابة بريد إلكتروني صالح.";
+                document.getElementById('regEmailError').style.display = 'inline-flex';
+                return;
+            }
+            if (!password) {
+                document.getElementById('regPassError').style.display = 'inline-flex';
+                return;
+            }
+            if (password !== passwordConfirm) {
+                document.getElementById('regPassConfirmError').style.display = 'inline-flex';
+                return;
+            }
             
             const { data, error } = await _supabase.auth.signUp({ email, password });
             if (error) {
-                alert("خطأ في إنشاء الحساب: " + error.message);
+                showAuthError('register', error.message);
             } else {
-                alert("تم إنشاء حسابك بنجاح! يرجى التحقق من بريدك الإلكتروني إذا تطلب الأمر تأكيد التفعيل.");
-                document.getElementById('authModal').classList.remove('show');
+                document.getElementById('regSuccess').style.display = 'inline-flex';
+                setTimeout(() => {
+                    document.getElementById('authModal').classList.remove('show');
+                    clearAuthErrors();
+                }, 4000);
             }
         }
 
         // الدالة الأصلية المطلوبة والمحافظ عليها لربط زر الدخول في الهيدر بالـ Modal
         async function handleLogin() {
-            // حافظنا على استدعاء الدالة بنفس الإسم تجنباً لأي مشاكل ربط، وهي الآن توجه لفتح المودال بالوضع الافتراضي الترحيبي للزائر
             document.getElementById('authModal').classList.add('show');
         }
 
-        document.getElementById('loginTrigger').addEventListener('click', (e) => { e.preventDefault(); document.getElementById('authModal').classList.add('show'); });
+        document.getElementById('loginTrigger').addEventListener('click', (e) => { e.preventDefault(); clearAuthErrors(); document.getElementById('authModal').classList.add('show'); });
 
         // باقي الوظائف (Loader, UI logic, etc.) كما هي
         let currentProgress = 0;
@@ -1503,7 +1605,11 @@
         function triggerSelection() {
             const checkedBoxes = document.querySelectorAll('.service-select-chk:checked');
             const messageInput = document.getElementById('message');
-            if(checkedBoxes.length === 0) { alert('برجاء تحديد خدمة واحدة على الأقل بالضغط على مربع التحديد داخل بطاقة الخدمة.'); return; }
+            if(checkedBoxes.length === 0) {
+                // استبدال تنبيه اختيار الخدمات ليكون متقن بدون إزعاج منبثق
+                document.getElementById('pricing').scrollIntoView({ behavior: 'smooth' });
+                return;
+            }
             let selectedServices = [];
             checkedBoxes.forEach(cb => { selectedServices.push(cb.value); });
             const billingType = pricingCheckbox.checked ? 'السنوي' : 'الشهري';
