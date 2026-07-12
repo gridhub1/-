@@ -1213,7 +1213,7 @@
                     
                     <li class="user-profile-menu" id="userProfileMenu">
                         <div class="profile-trigger" id="profileTriggerBtn">
-                            <img src="https://i.ibb.co/ MyhstGh0/Picsart-26-07-10-23-47-06-393.png" id="userAvatarImg" alt="User Avatar">
+                            <img src="https://i.ibb.co/MyhstGh0/Picsart-26-07-10-23-47-06-393.png" id="userAvatarImg" alt="User Avatar">
                             <span id="navUsername">مستخدم</span>
                             <i class="fa-solid fa-chevron-down" style="font-size:0.8rem; color:var(--text-muted)"></i>
                         </div>
@@ -1286,13 +1286,29 @@
     </div>
 
     <div class="settings-modal" id="settingsModal">
-        <div class="settings-card">
+        <div class="settings-card" style="max-width: 550px;">
             <h3>إعدادات الحساب الإبداعية</h3>
+            
+            <div class="form-group" style="margin-bottom:20px; text-align:right;">
+                <label><i class="fa-solid fa-camera"></i> تغيير صورة البروفايل</label>
+                <input type="file" id="settingsAvatarInput" accept="image/*" class="cyber-input" style="padding: 10px;">
+                <div class="cyber-success-msg" id="avatarSuccessMsg"><i class="fa-solid fa-circle-check"></i> تم تحديث الصورة بنجاح!</div>
+            </div>
+
             <div class="form-group" style="margin-bottom:20px; text-align:right;">
                 <label>تعديل اسم المستخدم (اليوزر نيم)</label>
                 <input type="text" id="settingsUsernameInput" class="cyber-input" placeholder="اكتب اسم المستخدم الجديد">
                 <div class="cyber-success-msg" id="settingsSuccessMsg"><i class="fa-solid fa-circle-check"></i> تم تحديث الاسم بنجاح!</div>
             </div>
+            
+            <div class="form-group" style="margin-bottom:25px; text-align:right; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px;">
+                <label><i class="fa-solid fa-shield-halved"></i> الأمان وكلمة المرور</label>
+                <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:10px;">اضغط على الزر لإرسال رمز تحقق ورابط تغيير كلمة المرور مباشرة إلى بريدك الإلكتروني المسجل.</p>
+                <button class="btn btn-secondary" style="width:100%; padding:10px; font-size:1rem;" onclick="sendPasswordResetEmail()">إرسال رمز إعادة تعيين كلمة السر</button>
+                <div class="cyber-success-msg" id="resetSuccessMsg"><i class="fa-solid fa-paper-plane"></i> تم إرسال الرسالة! يرجى مراجعة صندوق الوارد والـ Spam.</div>
+                <div class="cyber-error-msg" id="resetErrorMsg"><i class="fa-solid fa-circle-exclamation"></i> عذراً، فشل إرسال البريد. حاول مجدداً.</div>
+            </div>
+
             <button class="btn btn-primary" style="width:100%" onclick="saveNewUsername()">حفظ التعديلات</button>
             <button class="btn" style="width:100%; margin-top:10px; background:rgba(255,255,255,0.05); color:var(--text-muted);" onclick="document.getElementById('settingsModal').classList.remove('show')">إلغاء</button>
         </div>
@@ -1483,22 +1499,24 @@
         const supabaseKey = 'sb_publishable_ooBRDKkNixnZFYJ-5Am5tA_QybONhv8';
         const _supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
-        // مراقبة حالة تسجيل الدخول تلقائيًا وتحديث شكل واجهة الهيدر (حل مشكلة بقاء زر دخول)
+        // مراقبة حالة تسجيل الدخول تلقائيًا وتحديث شكل واجهة الهيدر
         _supabase.auth.onAuthStateChange((event, session) => {
             const loginNavLi = document.getElementById('loginNavLi');
             const userProfileMenu = document.getElementById('userProfileMenu');
             
             if (session && session.user) {
-                // المستخدم مسجل دخول حالياً
                 if(loginNavLi) loginNavLi.style.display = 'none';
                 if(userProfileMenu) userProfileMenu.style.display = 'block';
                 
-                // جلب اليوزر نيم من البيانت المخصصة أو البريد الإلكتروني
                 const username = session.user.user_metadata.username || session.user.email.split('@')[0];
                 document.getElementById('navUsername').innerText = username;
                 document.getElementById('dropdownUsername').innerText = username;
+                
+                // جلب صورة المستخدم إذا كانت موجودة في الـ Metadata
+                if (session.user.user_metadata.avatar_url) {
+                    document.getElementById('userAvatarImg').src = session.user.user_metadata.avatar_url;
+                }
             } else {
-                // المستخدم غير مسجل دخول
                 if(loginNavLi) loginNavLi.style.display = 'block';
                 if(userProfileMenu) userProfileMenu.style.display = 'none';
             }
@@ -1517,48 +1535,96 @@
             });
         }
 
-        // فتح نافذة الإعدادات
+        // فتح نافذة الإعدادات وتصفير رسائل النجاح
         function openSettingsModal() {
             document.getElementById('profileDropdownMenu').classList.remove('show');
             const currentName = document.getElementById('navUsername').innerText;
             document.getElementById('settingsUsernameInput').value = currentName;
+            document.getElementById('settingsAvatarInput').value = ''; 
+            document.getElementById('settingsSuccessMsg').style.display = 'none';
+            document.getElementById('avatarSuccessMsg').style.display = 'none';
+            document.getElementById('resetSuccessMsg').style.display = 'none';
+            document.getElementById('resetErrorMsg').style.display = 'none';
             document.getElementById('settingsModal').classList.add('show');
         }
 
-        // حفظ اسم المستخدم الجديد في Supabase
+        // حفظ اسم المستخدم الجديد وتحديث الصورة الشخصية
         async function saveNewUsername() {
             const newUsername = document.getElementById('settingsUsernameInput').value.trim();
-            if(!newUsername) return;
-            
-            const { data, error } = await _supabase.auth.updateUser({
-                data: { username: newUsername }
-            });
-            
-            if(!error) {
-                document.getElementById('settingsSuccessMsg').style.display = 'inline-flex';
-                document.getElementById('navUsername').innerText = newUsername;
-                document.getElementById('dropdownUsername').innerText = newUsername;
-                setTimeout(() => {
-                    document.getElementById('settingsModal').classList.remove('show');
-                    document.getElementById('settingsSuccessMsg').style.display = 'none';
-                }, 1500);
+            const avatarFile = document.getElementById('settingsAvatarInput').files[0];
+            let updateData = { username: newUsername };
+
+            // التعامل مع رفع الصورة وتحويلها لـ Base64 لربطها بـ metadata الحساب بأمان وسهولة
+            if (avatarFile) {
+                const reader = new FileReader();
+                reader.readAsDataURL(avatarFile);
+                reader.onload = async function () {
+                    const base64Image = reader.result;
+                    const { error: imgError } = await _supabase.auth.updateUser({
+                        data: { username: newUsername, avatar_url: base64Image }
+                    });
+                    if(!imgError) {
+                        document.getElementById('userAvatarImg').src = base64Image;
+                        document.getElementById('avatarSuccessMsg').style.display = 'inline-flex';
+                    }
+                };
+            } else {
+                if(!newUsername) return;
+                const { data, error } = await _supabase.auth.updateUser({
+                    data: { username: newUsername }
+                });
+                if(!error) {
+                    document.getElementById('settingsSuccessMsg').style.display = 'inline-flex';
+                    document.getElementById('navUsername').innerText = newUsername;
+                    document.getElementById('dropdownUsername').innerText = newUsername;
+                }
+            }
+
+            setTimeout(() => {
+                document.getElementById('settingsModal').classList.remove('show');
+                document.getElementById('settingsSuccessMsg').style.display = 'none';
+                document.getElementById('avatarSuccessMsg').style.display = 'none';
+            }, 1500);
+        }
+
+        // دالة إرسال بريد إعادة تعيين كلمة السر الفاخرة
+        async function sendPasswordResetEmail() {
+            document.getElementById('resetSuccessMsg').style.display = 'none';
+            document.getElementById('resetErrorMsg').style.display = 'none';
+
+            const { data: { user } } = await _supabase.auth.getUser();
+            if (user && user.email) {
+                const { error } = await _supabase.auth.resetPasswordForEmail(user.email, {
+                    redirectTo: 'https://gridhub1.github.io/-/',
+                });
+                if (error) {
+                    document.getElementById('resetErrorMsg').style.display = 'inline-flex';
+                } else {
+                    document.getElementById('resetSuccessMsg').style.display = 'inline-flex';
+                }
             }
         }
 
-        // دالة تسجيل الخروج الحقيقية
+        // دالة تسجيل الخروج الحقيقية وتصفير الـ inputs تماماً لحل مشكلة الخطأ العالق
         async function handleLogoutReal() {
             await _supabase.auth.signOut();
+            clearInputsAndErrors();
             window.location.reload();
         }
 
-        // دالة مساعدة لتنظيف رسائل الأخطاء السابقة
-        function clearAuthErrors() {
+        // دالة مساعدة لتنظيف رسائل الأخطاء وتصفير المدخلات لمنع تداخل قيم البريد والرمز العالق
+        function clearInputsAndErrors() {
             document.querySelectorAll('.cyber-error-msg, .cyber-success-msg').forEach(el => el.style.display = 'none');
+            document.getElementById('loginEmail').value = '';
+            document.getElementById('loginPass').value = '';
+            document.getElementById('regEmail').value = '';
+            document.getElementById('regPass').value = '';
+            document.getElementById('regPassConfirm').value = '';
+            document.getElementById('regUsername').value = '';
         }
 
         // دالة ترجمة وتوجيه رسائل خطأ Supabase بشكل مضمن احترافي
         function showAuthError(panel, errorText) {
-            clearAuthErrors();
             const msg = errorText.toLowerCase();
             
             if (panel === 'login') {
@@ -1578,8 +1644,8 @@
                 } else if (msg.includes('already registered') || msg.includes('user already exists')) {
                     document.getElementById('regEmailError').innerText = "هذا البريد الإلكتروني مسجل بالفعل لدينا.";
                     document.getElementById('regEmailError').style.display = 'inline-flex';
-                } else if (msg.includes('email')) {
-                    document.getElementById('regEmailError').innerText = "يرجى إدخال بريد إلكتروني صحيح.";
+                } else if (msg.includes('email') || msg.includes('validation')) {
+                    document.getElementById('regEmailError').innerText = "يرجى إدخال بريد إلكتروني صحيح وصالح.";
                     document.getElementById('regEmailError').style.display = 'inline-flex';
                 } else {
                     document.getElementById('regPassConfirmError').innerText = "حدث خطأ: " + errorText;
@@ -1592,15 +1658,16 @@
         async function checkAuthAndProceed() {
             const { data: { user } } = await _supabase.auth.getUser();
             if (!user) {
+                clearInputsAndErrors();
                 document.getElementById('authModal').classList.add('show');
             } else {
                 triggerSelection();
             }
         }
 
-        // دالة التبديل التفاعلي بين واجهات تسجيل الدخول والإنشاء
+        // دالة التبديل التفاعلي بين واجهات تسجيل الدخول والإنشاء وتصفير الحقول بينها
         function switchAuthTab(type) {
-            clearAuthErrors();
+            clearInputsAndErrors();
             const tabs = document.querySelectorAll('.auth-tab');
             const panels = document.querySelectorAll('.auth-panel');
             
@@ -1618,9 +1685,10 @@
 
         // دالة تسجيل الدخول المستقلة والحقيقية بالكامل
         async function handleLoginOnly() {
-            clearAuthErrors();
-            const email = document.getElementById('loginEmail').value;
+            const email = document.getElementById('loginEmail').value.trim();
             const password = document.getElementById('loginPass').value;
+            
+            document.querySelectorAll('.cyber-error-msg, .cyber-success-msg').forEach(el => el.style.display = 'none');
             
             if (!email) {
                 document.getElementById('loginEmailError').innerText = "برجاء كتابة البريد الإلكتروني الخاص بك.";
@@ -1640,18 +1708,19 @@
                 document.getElementById('loginSuccess').style.display = 'inline-flex';
                 setTimeout(() => {
                     document.getElementById('authModal').classList.remove('show');
-                    clearAuthErrors();
+                    clearInputsAndErrors();
                 }, 1500);
             }
         }
 
-        // دالة إنشاء حساب جديد مستقلة وحقيقية تماماً مع إضافة خيار اسم المستخدم
+        // دالة إنشاء حساب جديد مستقلة وحقيقية تماماً
         async function handleRegisterOnly() {
-            clearAuthErrors();
-            const email = document.getElementById('regEmail').value;
+            const email = document.getElementById('regEmail').value.trim();
             const password = document.getElementById('regPass').value;
             const passwordConfirm = document.getElementById('regPassConfirm').value;
             const username = document.getElementById('regUsername').value.trim();
+            
+            document.querySelectorAll('.cyber-error-msg, .cyber-success-msg').forEach(el => el.style.display = 'none');
             
             if (!email) {
                 document.getElementById('regEmailError').innerText = "برجاء كتابة بريد إلكتروني صالح.";
@@ -1681,19 +1750,19 @@
                 document.getElementById('regSuccess').style.display = 'inline-flex';
                 setTimeout(() => {
                     document.getElementById('authModal').classList.remove('show');
-                    clearAuthErrors();
+                    clearInputsAndErrors();
                 }, 4000);
             }
         }
 
-        // الدالة الأصلية المطلوبة والمحافظ عليها لربط زر الدخول في الهيدر بالـ Modal
-        async function handleLogin() {
-            document.getElementById('authModal').classList.add('show');
-        }
+        // ربط زر الدخول في الهيدر بالـ Modal مع تنظيف مسبق للحقول
+        document.getElementById('loginTrigger').addEventListener('click', (e) => { 
+            e.preventDefault(); 
+            clearInputsAndErrors(); 
+            document.getElementById('authModal').classList.add('show'); 
+        });
 
-        document.getElementById('loginTrigger').addEventListener('click', (e) => { e.preventDefault(); clearAuthErrors(); document.getElementById('authModal').classList.add('show'); });
-
-        // باقي الوظائف (Loader, UI logic, etc.) كما هي
+        // باقي الوظائف (Loader, UI logic, etc.) كما هي بدون تغيير
         let currentProgress = 0;
         let isPageLoaded = false;
         const counterEl = document.getElementById('loadCounter');
