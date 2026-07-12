@@ -1356,6 +1356,59 @@
             box-shadow: 0 5px 20px rgba(0,0,0,0.5);
             animation: fadeInError 0.3s ease forwards;
         }
+
+        /* ستايل إضافي لمميزات حقول الأمان الجديدة */
+        .password-field-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        .password-field-wrapper .cyber-input {
+            padding-left: 50px;
+        }
+        .password-toggle-icon {
+            position: absolute;
+            left: 15px;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            font-size: 1.1rem;
+            user-select: none;
+            z-index: 10;
+        }
+        .password-toggle-icon:hover {
+            color: var(--primary-blue);
+        }
+        .forgot-pass-link {
+            display: block;
+            text-align: left;
+            margin-top: 8px;
+            font-size: 0.9rem;
+            color: var(--glow-blue);
+            text-decoration: none;
+            transition: var(--transition-smooth);
+            cursor: pointer;
+            font-weight: 500;
+        }
+        .forgot-pass-link:hover {
+            color: var(--pure-white);
+            text-shadow: 0 0 8px rgba(0, 85, 255, 0.6);
+        }
+        .pass-strength-meter {
+            height: 4px;
+            width: 100%;
+            background: rgba(255,255,255,0.05);
+            margin-top: 8px;
+            border-radius: 2px;
+            overflow: hidden;
+            position: relative;
+            display: none;
+        }
+        .pass-strength-bar {
+            height: 100%;
+            width: 0%;
+            transition: all 0.3s ease;
+        }
     </style>
 </head>
 <body>
@@ -1446,9 +1499,14 @@
                 </div>
                 <div class="form-group" style="margin-bottom:20px">
                     <label>كلمة المرور</label>
-                    <input type="password" id="loginPass" placeholder="أدخل كلمة المرور" class="cyber-input" required>
+                    <div class="password-field-wrapper">
+                        <input type="password" id="loginPass" placeholder="أدخل كلمة المرور" class="cyber-input" required>
+                        <i class="fa-solid fa-eye password-toggle-icon" onclick="togglePasswordVisibility('loginPass', this)"></i>
+                    </div>
+                    <a class="forgot-pass-link" onclick="handleForgotPasswordClick()">نسيت كلمة السر؟</a>
                     <div class="cyber-error-msg" id="loginPassError"><i class="fa-solid fa-key"></i> خطأ في كلمة المرور، يرجى إعادة التحقق منها.</div>
                     <div class="cyber-success-msg" id="loginSuccess"><i class="fa-solid fa-circle-check"></i> أهلاً بك مجدداً! تم تسجيل الدخول...</div>
+                    <div class="cyber-success-msg" id="loginResetSuccess" style="color:var(--glow-blue); text-shadow: 0 0 10px rgba(59, 130, 246, 0.4);"><i class="fa-solid fa-paper-plane"></i> تم إرسال رابط إعادة تعيين كلمة المرور إلى بريدك المكتوب!</div>
                 </div>
                 <button class="btn btn-primary" style="width:100%" onclick="handleLoginOnly()">تسجيل الدخول</button>
             </div>
@@ -1484,12 +1542,19 @@
 
                 <div class="form-group" style="margin-bottom:15px">
                     <label>كلمة المرور</label>
-                    <input type="password" id="regPass" placeholder="أنشئ كلمة مرور قوية" class="cyber-input" required>
+                    <div class="password-field-wrapper">
+                        <input type="password" id="regPass" placeholder="أنشئ كلمة مرور قوية" class="cyber-input" oninput="checkPasswordStrengthLive(this.value)" required>
+                        <i class="fa-solid fa-eye password-toggle-icon" onclick="togglePasswordVisibility('regPass', this)"></i>
+                    </div>
+                    <div class="pass-strength-meter" id="passStrengthMeter"><div class="pass-strength-bar" id="passStrengthBar"></div></div>
                     <div class="cyber-error-msg" id="regPassError" style="line-height: 1.4; text-align: justify;"><i class="fa-solid fa-triangle-exclamation"></i> يجب أن تحتوي كلمة المرور على: حروف كبيرة (<span class="en-text">A-Z</span>)، صغيرة (<span class="en-text">a-z</span>)، أرقام (<span class="en-text">0-9</span>)، ورموز خاصة مثل (!@#$).</div>
                 </div>
                 <div class="form-group" style="margin-bottom:20px">
                     <label>تأكيد كلمة المرور</label>
-                    <input type="password" id="regPassConfirm" placeholder="أعد كتابة كلمة المرور" class="cyber-input" required>
+                    <div class="password-field-wrapper">
+                        <input type="password" id="regPassConfirm" placeholder="أعد كتابة كلمة المرور" class="cyber-input" required>
+                        <i class="fa-solid fa-eye password-toggle-icon" onclick="togglePasswordVisibility('regPassConfirm', this)"></i>
+                    </div>
                     <div class="cyber-error-msg" id="regPassConfirmError"><i class="fa-solid fa-circle-xmark"></i> كلمات المرور غير متطابقة إطلاقاً.</div>
                     <div class="cyber-success-msg" id="regSuccess"><i class="fa-solid fa-envelope-circle-check"></i> تم إنشاء الحساب! يرجى مراجعة بريدك الإلكتروني للتفعيل.</div>
                 </div>
@@ -1715,7 +1780,7 @@
     <section id="contact" class="contact-section">
         <div class="container">
             <div class="contact-box reveal-zoom">
-                <h2>جاهز لتطوير مشروعك القادم؟</h2>
+                <h2>جاهز لتطوير مشروعك القادم?</h2>
                 <p>تواصل معنا اليوم ودعنا نحول أفكارك إلى واقع رقمي مبهر.</p>
 
                 <form class="cyber-form" id="cyberContactForm" action="https://formsubmit.co/GridHub200@gmail.com" method="POST">
@@ -1969,6 +2034,11 @@
             if(document.getElementById('regAvatarInput')) document.getElementById('regAvatarInput').value = '';
             if(regAvatarCropBox) regAvatarCropBox.style.display = 'none';
             finalAvatarBase64 = "";
+            const meter = document.getElementById('passStrengthMeter');
+            if(meter) meter.style.display = 'none';
+            document.querySelectorAll('.password-toggle-icon').forEach(icon => {
+                icon.className = 'fa-solid fa-eye password-toggle-icon';
+            });
         }
 
         function showAuthError(panel, errorText) {
@@ -2370,6 +2440,62 @@
         document.querySelectorAll('.btn, .social-icon, .select-service-wrapper, .utility-btn').forEach(element => {
             element.addEventListener('click', () => playCyberClickSound(750, 'triangle', 0.06));
         });
+
+        // ==========================================================================
+        // الدوال المضافة حديثاً للتحكم بمميزات الأمان ونسيان كلمة السر
+        // ==========================================================================
+        function togglePasswordVisibility(inputId, iconEl) {
+            const input = document.getElementById(inputId);
+            if (input.type === 'password') {
+                input.type = 'text';
+                iconEl.className = 'fa-solid fa-eye-slash password-toggle-icon';
+            } else {
+                input.type = 'password';
+                iconEl.className = 'fa-solid fa-eye password-toggle-icon';
+            }
+        }
+
+        async function handleForgotPasswordClick() {
+            document.querySelectorAll('.cyber-error-msg, .cyber-success-msg').forEach(el => el.style.display = 'none');
+            const email = document.getElementById('loginEmail').value.trim();
+            if (!email) {
+                document.getElementById('loginEmailError').innerText = "برجاء كتابة بريدك الإلكتروني أولاً في الحقل أعلاه لإرسال رابط الاستعادة.";
+                document.getElementById('loginEmailError').style.display = 'inline-flex';
+                return;
+            }
+            const { error } = await _supabase.auth.resetPasswordForEmail(email, {
+                redirectTo: window.location.href,
+            });
+            if (error) {
+                document.getElementById('loginEmailError').innerText = "حدث خطأ: " + error.message;
+                document.getElementById('loginEmailError').style.display = 'inline-flex';
+            } else {
+                document.getElementById('loginResetSuccess').style.display = 'inline-flex';
+            }
+        }
+
+        function checkPasswordStrengthLive(password) {
+            const meter = document.getElementById('passStrengthMeter');
+            const bar = document.getElementById('passStrengthBar');
+            if(!password) { meter.style.display = 'none'; return; }
+            meter.style.display = 'block';
+            let strength = 0;
+            if (password.length >= 8) strength++;
+            if (/[A-Z]/.test(password)) strength++;
+            if (/[0-9]/.test(password)) strength++;
+            if (/[^A-Za-z0-9]/.test(password)) strength++;
+            
+            if (strength <= 1) {
+                bar.style.width = '33%';
+                bar.style.backgroundColor = '#ff3366';
+            } else if (strength === 2 || strength === 3) {
+                bar.style.width = '66%';
+                bar.style.backgroundColor = '#ffcc00';
+            } else {
+                bar.style.width = '100%';
+                bar.style.backgroundColor = '#00ff66';
+            }
+        }
     </script>
 <script>(function(w,d, s, id) {if(typeof(w.webpushr)!=='undefined') return;w.webpushr=w.webpushr||function(){(w.webpushr.q=w.webpushr.q||[]).push(arguments)};var js, fjs = d.getElementsByTagName(s)[0];js = d.createElement(s); js.id = id;js.src = "https://cdn.webpushr.com/app.min.js";
 fjs.parentNode.appendChild(js);}(window,document, 'script', 'webpushr-jssdk-alternative'));
