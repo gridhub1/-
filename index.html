@@ -245,6 +245,7 @@
             display: flex;
             list-style: none;
             gap: 35px;
+            align-items: center;
         }
 
         nav ul li a {
@@ -284,6 +285,90 @@
             color: var(--pure-white);
             cursor: pointer;
             transition: var(--transition-smooth);
+        }
+
+        /* استايل مكون البروفايل الجديد الفاخر */
+        .user-profile-menu {
+            position: relative;
+            display: none;
+        }
+        .profile-trigger {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            padding: 5px 12px;
+            border-radius: 50px;
+            background: rgba(0, 85, 255, 0.1);
+            border: 1px solid rgba(0, 85, 255, 0.2);
+            transition: var(--transition-smooth);
+        }
+        .profile-trigger:hover {
+            background: rgba(0, 85, 255, 0.2);
+            box-shadow: 0 0 15px rgba(0, 85, 255, 0.3);
+        }
+        .profile-trigger img {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: 1px solid var(--pure-white);
+            object-fit: cover;
+        }
+        .profile-trigger span {
+            color: var(--pure-white);
+            font-size: 1rem;
+            font-weight: bold;
+        }
+        .profile-dropdown {
+            position: absolute;
+            top: 130%;
+            left: 0;
+            background: linear-gradient(135deg, #0a2240 0%, #020813 100%);
+            border: 1px solid rgba(0, 85, 255, 0.3);
+            border-radius: 16px;
+            min-width: 200px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            padding: 10px 0;
+            display: none;
+            z-index: 10000;
+            animation: fadeInError 0.3s ease forwards;
+        }
+        .profile-dropdown.show {
+            display: block;
+        }
+        .dropdown-info {
+            padding: 10px 15px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+        .dropdown-info strong {
+            display: block;
+            color: var(--pure-white);
+            font-size: 1.05rem;
+            margin-top: 2px;
+        }
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 15px;
+            color: var(--text-light);
+            text-decoration: none;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            text-align: right;
+        }
+        .dropdown-item:hover {
+            background: rgba(0, 85, 255, 0.15);
+            color: var(--pure-white);
+        }
+        .dropdown-item.logout-btn {
+            color: #ff3366;
+        }
+        .dropdown-item.logout-btn:hover {
+            background: rgba(255, 51, 102, 0.1);
         }
 
         /* ==========================================================================
@@ -988,7 +1073,7 @@
         /* ==========================================================================
            8. استايل نافذة الشكر والترحيب (Thank You Modal Style)
            ========================================================================== */
-        .thankyou-modal, .auth-modal {
+        .thankyou-modal, .auth-modal, .settings-modal {
             position: fixed;
             top: 0;
             left: 0;
@@ -1005,11 +1090,11 @@
             pointer-events: none;
             transition: opacity 0.5s ease;
         }
-        .thankyou-modal.show, .auth-modal.show {
+        .thankyou-modal.show, .auth-modal.show, .settings-modal.show {
             opacity: 1;
             pointer-events: auto;
         }
-        .thankyou-card, .auth-card {
+        .thankyou-card, .auth-card, .settings-card {
             background: linear-gradient(135deg, #0a2240 0%, #020813 100%);
             border: 2px solid var(--primary-blue);
             box-shadow: 0 0 30px rgba(0, 85, 255, 0.4);
@@ -1021,7 +1106,7 @@
             transform: scale(0.7);
             transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
-        .thankyou-modal.show .thankyou-card, .auth-modal.show .auth-card {
+        .thankyou-modal.show .thankyou-card, .auth-modal.show .auth-card, .settings-modal.show .settings-card {
             transform: scale(1);
         }
         .thankyou-card img {
@@ -1029,7 +1114,7 @@
             margin-bottom: 20px;
             filter: drop-shadow(0 0 15px rgba(0, 85, 255, 0.6));
         }
-        .thankyou-card h3 {
+        .thankyou-card h3, .settings-card h3 {
             font-size: 2.2rem;
             color: var(--pure-white);
             margin-bottom: 15px;
@@ -1124,7 +1209,27 @@
                     <li><a href="#services" class="nav-link">خدماتنا</a></li>
                     <li><a href="#pricing" class="nav-link">الأسعار</a></li>
                     <li><a href="#contact" class="nav-link">تواصل معنا</a></li>
-                    <li><a href="#" id="loginTrigger" style="color:var(--primary-blue)">دخول</a></li>
+                    <li id="loginNavLi"><a href="#" id="loginTrigger" style="color:var(--primary-blue)">دخول</a></li>
+                    
+                    <li class="user-profile-menu" id="userProfileMenu">
+                        <div class="profile-trigger" id="profileTriggerBtn">
+                            <img src="https://i.ibb.co/ MyhstGh0/Picsart-26-07-10-23-47-06-393.png" id="userAvatarImg" alt="User Avatar">
+                            <span id="navUsername">مستخدم</span>
+                            <i class="fa-solid fa-chevron-down" style="font-size:0.8rem; color:var(--text-muted)"></i>
+                        </div>
+                        <div class="profile-dropdown" id="profileDropdownMenu">
+                            <div class="dropdown-info">
+                                مسجل دخول كـ
+                                <strong id="dropdownUsername">جاري التحميل...</strong>
+                            </div>
+                            <div class="dropdown-item" onclick="openSettingsModal()">
+                                <i class="fa-solid fa-gear"></i> إعدادات الحساب
+                            </div>
+                            <div class="dropdown-item logout-btn" onclick="handleLogoutReal()">
+                                <i class="fa-solid fa-sign-out-alt"></i> تسجيل الخروج
+                            </div>
+                        </div>
+                    </li>
                 </ul>
             </nav>
         </div>
@@ -1154,6 +1259,10 @@
 
             <div class="auth-panel" id="registerPanel">
                 <div class="form-group" style="margin-bottom:15px">
+                    <label>اسم المستخدم (اليوزر نيم)</label>
+                    <input type="text" id="regUsername" placeholder="مثال: ahmed_grid" class="cyber-input">
+                </div>
+                <div class="form-group" style="margin-bottom:15px">
                     <label>البريد الإلكتروني</label>
                     <input type="email" id="regEmail" placeholder="name@example.com" class="cyber-input">
                     <div class="cyber-error-msg" id="regEmailError"><i class="fa-solid fa-circle-exclamation"></i> البريد مسجل بالفعل أو صيغته غير صحيحة.</div>
@@ -1173,6 +1282,19 @@
             </div>
 
             <button class="btn" style="width:100%; margin-top:15px; background:rgba(255,255,255,0.05); color:var(--text-muted);" onclick="document.getElementById('authModal').classList.remove('show')">إغلاق النافذة</button>
+        </div>
+    </div>
+
+    <div class="settings-modal" id="settingsModal">
+        <div class="settings-card">
+            <h3>إعدادات الحساب الإبداعية</h3>
+            <div class="form-group" style="margin-bottom:20px; text-align:right;">
+                <label>تعديل اسم المستخدم (اليوزر نيم)</label>
+                <input type="text" id="settingsUsernameInput" class="cyber-input" placeholder="اكتب اسم المستخدم الجديد">
+                <div class="cyber-success-msg" id="settingsSuccessMsg"><i class="fa-solid fa-circle-check"></i> تم تحديث الاسم بنجاح!</div>
+            </div>
+            <button class="btn btn-primary" style="width:100%" onclick="saveNewUsername()">حفظ التعديلات</button>
+            <button class="btn" style="width:100%; margin-top:10px; background:rgba(255,255,255,0.05); color:var(--text-muted);" onclick="document.getElementById('settingsModal').classList.remove('show')">إلغاء</button>
         </div>
     </div>
 
@@ -1361,6 +1483,74 @@
         const supabaseKey = 'sb_publishable_ooBRDKkNixnZFYJ-5Am5tA_QybONhv8';
         const _supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
+        // مراقبة حالة تسجيل الدخول تلقائيًا وتحديث شكل واجهة الهيدر (حل مشكلة بقاء زر دخول)
+        _supabase.auth.onAuthStateChange((event, session) => {
+            const loginNavLi = document.getElementById('loginNavLi');
+            const userProfileMenu = document.getElementById('userProfileMenu');
+            
+            if (session && session.user) {
+                // المستخدم مسجل دخول حالياً
+                if(loginNavLi) loginNavLi.style.display = 'none';
+                if(userProfileMenu) userProfileMenu.style.display = 'block';
+                
+                // جلب اليوزر نيم من البيانت المخصصة أو البريد الإلكتروني
+                const username = session.user.user_metadata.username || session.user.email.split('@')[0];
+                document.getElementById('navUsername').innerText = username;
+                document.getElementById('dropdownUsername').innerText = username;
+            } else {
+                // المستخدم غير مسجل دخول
+                if(loginNavLi) loginNavLi.style.display = 'block';
+                if(userProfileMenu) userProfileMenu.style.display = 'none';
+            }
+        });
+
+        // فتح وإغلاق القائمة المنسدلة للبروفايل
+        const profileTriggerBtn = document.getElementById('profileTriggerBtn');
+        const profileDropdownMenu = document.getElementById('profileDropdownMenu');
+        if(profileTriggerBtn && profileDropdownMenu) {
+            profileTriggerBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                profileDropdownMenu.classList.toggle('show');
+            });
+            document.addEventListener('click', () => {
+                profileDropdownMenu.classList.remove('show');
+            });
+        }
+
+        // فتح نافذة الإعدادات
+        function openSettingsModal() {
+            document.getElementById('profileDropdownMenu').classList.remove('show');
+            const currentName = document.getElementById('navUsername').innerText;
+            document.getElementById('settingsUsernameInput').value = currentName;
+            document.getElementById('settingsModal').classList.add('show');
+        }
+
+        // حفظ اسم المستخدم الجديد في Supabase
+        async function saveNewUsername() {
+            const newUsername = document.getElementById('settingsUsernameInput').value.trim();
+            if(!newUsername) return;
+            
+            const { data, error } = await _supabase.auth.updateUser({
+                data: { username: newUsername }
+            });
+            
+            if(!error) {
+                document.getElementById('settingsSuccessMsg').style.display = 'inline-flex';
+                document.getElementById('navUsername').innerText = newUsername;
+                document.getElementById('dropdownUsername').innerText = newUsername;
+                setTimeout(() => {
+                    document.getElementById('settingsModal').classList.remove('show');
+                    document.getElementById('settingsSuccessMsg').style.display = 'none';
+                }, 1500);
+            }
+        }
+
+        // دالة تسجيل الخروج الحقيقية
+        async function handleLogoutReal() {
+            await _supabase.auth.signOut();
+            window.location.reload();
+        }
+
         // دالة مساعدة لتنظيف رسائل الأخطاء السابقة
         function clearAuthErrors() {
             document.querySelectorAll('.cyber-error-msg, .cyber-success-msg').forEach(el => el.style.display = 'none');
@@ -1455,12 +1645,13 @@
             }
         }
 
-        // دالة إنشاء حساب جديد مستقلة وحقيقية تماماً
+        // دالة إنشاء حساب جديد مستقلة وحقيقية تماماً مع إضافة خيار اسم المستخدم
         async function handleRegisterOnly() {
             clearAuthErrors();
             const email = document.getElementById('regEmail').value;
             const password = document.getElementById('regPass').value;
             const passwordConfirm = document.getElementById('regPassConfirm').value;
+            const username = document.getElementById('regUsername').value.trim();
             
             if (!email) {
                 document.getElementById('regEmailError').innerText = "برجاء كتابة بريد إلكتروني صالح.";
@@ -1476,7 +1667,14 @@
                 return;
             }
             
-            const { data, error } = await _supabase.auth.signUp({ email, password });
+            const { data, error } = await _supabase.auth.signUp({ 
+                email, 
+                password,
+                options: {
+                    data: { username: username || email.split('@')[0] }
+                }
+            });
+            
             if (error) {
                 showAuthError('register', error.message);
             } else {
@@ -1606,7 +1804,6 @@
             const checkedBoxes = document.querySelectorAll('.service-select-chk:checked');
             const messageInput = document.getElementById('message');
             if(checkedBoxes.length === 0) {
-                // استبدال تنبيه اختيار الخدمات ليكون متقن بدون إزعاج منبثق
                 document.getElementById('pricing').scrollIntoView({ behavior: 'smooth' });
                 return;
             }
