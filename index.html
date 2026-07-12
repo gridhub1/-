@@ -1069,10 +1069,6 @@
     <div class="auth-modal" id="authModal">
         <div class="auth-card">
             <h3 style="color:white; margin-bottom: 20px;">تسجيل الدخول / إنشاء حساب</h3>
-            <button class="btn" style="width:100%; background:#4285F4; color:white; margin-bottom:10px" onclick="socialLogin('google')"><i class="fa-brands fa-google"></i> الدخول عبر جوجل</button>
-            <button class="btn" style="width:100%; background:#3b5998; color:white; margin-bottom:20px" onclick="socialLogin('facebook')"><i class="fa-brands fa-facebook"></i> الدخول عبر فيسبوك</button>
-            
-            <div style="border-top:1px solid #334; margin:20px 0;"></div>
             
             <input type="email" id="loginEmail" placeholder="البريد الإلكتروني" class="cyber-input" style="margin-bottom:15px">
             <input type="password" id="loginPass" placeholder="كلمة المرور" class="cyber-input" style="margin-bottom:20px">
@@ -1287,11 +1283,6 @@
                 if (signInError) alert("خطأ: " + signInError.message);
                 else { alert("تم تسجيل الدخول بنجاح!"); document.getElementById('authModal').classList.remove('show'); }
             } else { alert("تم إنشاء حسابك بنجاح!"); document.getElementById('authModal').classList.remove('show'); }
-        }
-
-        // تسجيل الدخول عبر التواصل الاجتماعي
-        async function socialLogin(provider) {
-            await _supabase.auth.signInWithOAuth({ provider: provider });
         }
 
         document.getElementById('loginTrigger').addEventListener('click', (e) => { e.preventDefault(); document.getElementById('authModal').classList.add('show'); });
