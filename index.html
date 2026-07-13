@@ -42,11 +42,17 @@
     <meta property="og:image:type" content="image/png">
     <meta property="og:image:width" content="512">
     <meta property="og:image:height" content="512">
+    <meta property="og:image:alt" content="GridHub Logo">
     <meta property="og:url" content="https://gridhub1.github.io/-/">
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="GridHub">
     
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="https://i.ibb.co/MyhstGh0/Picsart-26-07-10-23-47-06-393.png">
+
     <link rel="icon" type="image/png" href="https://i.ibb.co/MyhstGh0/Picsart-26-07-10-23-47-06-393.png">
+    <link rel="apple-touch-icon" href="https://i.ibb.co/MyhstGh0/Picsart-26-07-10-23-47-06-393.png">
+    <link rel="shortcut icon" href="https://i.ibb.co/MyhstGh0/Picsart-26-07-10-23-47-06-393.png" type="image/png">
     
     <script type="application/ld+json">
     {
@@ -2140,9 +2146,10 @@
             }
         }
 
+        // إصلاح المشكلة الأولى: فحص إذا كان مسجلاً الدخول بالفعل لعدم تكرار الطلب
         async function checkAuthAndProceed() {
-            const { data: { user } } = await _supabase.auth.getUser();
-            if (!user) {
+            const { data: { session } } = await _supabase.auth.getSession();
+            if (!session || !session.user) {
                 clearInputsAndErrors();
                 document.getElementById('authModal').classList.add('show');
             } else {
@@ -2199,6 +2206,7 @@
             }
         }
 
+        // إصلاح المشكلة الثانية: معالجة بيانات رقم الهاتف والـ Metadata الخاص بإنشاء الحساب لمنع ظهور حدث خطأ
         async function handleRegisterOnly() {
             const email = document.getElementById('regEmail').value.trim();
             const password = document.getElementById('regPass').value;
@@ -2233,7 +2241,7 @@
                 options: {
                     data: { 
                         username: username || email.split('@')[0],
-                        phone: phone, // إضافة رقم الهاتف إلى الـ Metadata
+                        phone: phone, 
                         avatar_url: finalAvatarBase64 || "https://i.ibb.co/MyhstGh0/Picsart-26-07-10-23-47-06-393.png"
                     }
                 }
