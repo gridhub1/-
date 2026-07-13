@@ -54,13 +54,24 @@
     <link rel="apple-touch-icon" href="https://i.ibb.co/MyhstGh0/Picsart-26-07-10-23-47-06-393.png">
     <link rel="shortcut icon" href="https://i.ibb.co/MyhstGh0/Picsart-26-07-10-23-47-06-393.png" type="image/png">
     
+    <!-- كود Schema المحدث لظهور اللوجو في محرك البحث -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@type": "Organization",
-      "url": "https://gridhub1.github.io/-/",
-      "logo": "https://i.ibb.co/MyhstGh0/Picsart-26-07-10-23-47-06-393.png",
       "name": "GridHub",
+      "url": "https://gridhub1.github.io/-/",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://i.ibb.co/MyhstGh0/Picsart-26-07-10-23-47-06-393.png",
+        "width": 512,
+        "height": 512
+      },
+      "sameAs": [
+        "https://www.facebook.com/share/195ZucLcU5/",
+        "https://youtube.com/@gridhub.com1?si=SwfzSv8vKCOxIrk2",
+        "https://vt.tiktok.com/ZSX8FeW2e/"
+      ],
       "description": "ندمج الكود الذكي بالتصميم الاحترافي لنصنع لعلامتك التجارية حضوراً رقمياً متكاملاً وقوياً."
     }
     </script>
@@ -1874,6 +1885,12 @@
                         <input type="email" id="email" name="البريد الإلكتروني" class="cyber-input en-text" placeholder="name@example.com" required>
                     </div>
 
+                    <!-- حقل رقم الهاتف المضاف حديثاً -->
+                    <div class="form-group">
+                        <label for="contactPhone">رقم الهاتف</label>
+                        <input type="tel" id="contactPhone" name="رقم الهاتف" class="cyber-input en-text" placeholder="+201234567890" required>
+                    </div>
+
                     <div class="form-group">
                         <label for="message">تفاصيل مشروعك أو رسالتك</label>
                         <textarea id="message" name="الرسالة" class="cyber-input" placeholder="اكتب لنا تفاصيل مشروعك أو استفسارك هنا..." required></textarea>
@@ -1916,6 +1933,7 @@
         // متغيرات الجلسة عشان نملى بيها الفورم تلقائي
         let currentUserEmail = "";
         let currentUserName = "";
+        let currentUserPhone = ""; // متغير لرقم الهاتف
 
         // مراقبة وتفعيل أداة تعديل مقاسات صورة البروفايل تفاعلياً عند الإنشاء
         let finalAvatarBase64 = "";
@@ -1999,6 +2017,7 @@
                 // حفظ البيانات للفورم التلقائي
                 currentUserEmail = session.user.email;
                 currentUserName = username;
+                currentUserPhone = session.user.user_metadata.phone || "";
                 
                 if (session.user.user_metadata.avatar_url) {
                     document.getElementById('userAvatarImg').src = session.user.user_metadata.avatar_url;
@@ -2008,6 +2027,7 @@
                 if(userProfileMenu) userProfileMenu.style.display = 'none';
                 currentUserEmail = "";
                 currentUserName = "";
+                currentUserPhone = "";
             }
         });
 
@@ -2406,6 +2426,7 @@
             const messageInput = document.getElementById('message');
             const nameInput = document.getElementById('name');
             const emailInput = document.getElementById('email');
+            const phoneInputContact = document.getElementById('contactPhone'); // حقل الهاتف الجديد
 
             if(checkedBoxes.length === 0) {
                 // لو مش محدد حاجة، نلفت نظره للخدمات عشان يختار
@@ -2417,9 +2438,10 @@
             checkedBoxes.forEach(cb => { selectedServices.push(cb.value); });
             const billingType = pricingCheckbox.checked ? 'السنوي' : 'الشهري';
             
-            // ملء حقول الاسم والإيميل تلقائياً من بيانات المستخدم المسجل
+            // ملء حقول الاسم والإيميل ورقم الهاتف تلقائياً من بيانات المستخدم المسجل
             if(nameInput && currentUserName) nameInput.value = currentUserName;
             if(emailInput && currentUserEmail) emailInput.value = currentUserEmail;
+            if(phoneInputContact && currentUserPhone) phoneInputContact.value = currentUserPhone;
 
             // بناء وملء رسالة الطلب تلقائياً
             if(messageInput) {
