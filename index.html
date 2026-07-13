@@ -3,6 +3,18 @@
 <head>
     <meta name="google-adsense-account" content="ca-pub-9137851727428529">
     
+    <style>
+        ins.adsbygoogle[data-ad-status="unfilled"], 
+        ins.adsbygoogle:empty { 
+            display: none !important; 
+            height: 0 !important; 
+            width: 0 !important; 
+        }
+        header, body, :root {
+            transition: background-color 0.5s cubic-bezier(0.4, 0, 0.2, 1), color 0.5s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.5s ease !important;
+        }
+    </style>
+    
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9137851727428529"
          crossorigin="anonymous"></script>
     <ins class="adsbygoogle"
@@ -35,6 +47,17 @@
     <meta property="og:site_name" content="GridHub">
     
     <link rel="icon" type="image/png" href="https://i.ibb.co/MyhstGh0/Picsart-26-07-10-23-47-06-393.png">
+    
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "url": "https://gridhub1.github.io/-/",
+      "logo": "https://i.ibb.co/MyhstGh0/Picsart-26-07-10-23-47-06-393.png",
+      "name": "GridHub",
+      "description": "ندمج الكود الذكي بالتصميم الاحترافي لنصنع لعلامتك التجارية حضوراً رقمياً متكاملاً وقوياً."
+    }
+    </script>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -2438,8 +2461,13 @@
 
         const themeBtn = document.getElementById('themeToggleBtn');
         themeBtn.addEventListener('click', () => {
-            const isLight = document.documentElement.classList.toggle('light-mode');
-            updateThemeIcon(isLight);
+            // إضافة تأثير حركي تلاشي ناعم للجسم بالكامل عند الضغط
+            document.body.style.opacity = "0.7";
+            setTimeout(() => {
+                const isLight = document.documentElement.classList.toggle('light-mode');
+                updateThemeIcon(isLight);
+                document.body.style.opacity = "1";
+            }, 150);
         });
 
         // فحص وضع جهاز المستخدم الافتراضي (مظلم أو مضيء) وتطبيقه تلقائياً عند أول زيارة
